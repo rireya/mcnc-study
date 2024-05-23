@@ -1,7 +1,7 @@
 async function loadMarkdown(fileName) {
-  const repo = 'rireya/mcnc-study';
-  const filePath = `docs/md/${fileName}`;
-  const url = `https://raw.githubusercontent.com/${repo}/main/${filePath}`;
+  const repo = 'mcnc-study';
+  const filePath = `/md/${fileName}`;
+  const url = `/${repo}/${filePath}`;
 
   const response = await fetch(url);
   const markdown = await response.text();
