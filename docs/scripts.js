@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const links = document.querySelectorAll('.sidebar a');
   const mdViewer = document.getElementById('md-viewer');
   const md = window.markdownit({
+      html: true, // HTML 태그를 허용하도록 설정
       highlight: function (str, lang) {
           if (lang && hljs.getLanguage(lang)) {
               try {
@@ -29,8 +30,10 @@ document.addEventListener("DOMContentLoaded", function() {
       fetch(`./md/${file}`)
           .then(response => response.text())
           .then(data => {
-              mdViewer.innerHTML = md.render(data);
+              let renderedHtml = md.render(data);
+              mdViewer.innerHTML = renderedHtml;
               document.querySelector('.content').scrollTo(0, 0);
+              addCopyButtons();
               // Highlight code blocks
               document.querySelectorAll('pre code').forEach((block) => {
                   hljs.highlightBlock(block);
@@ -58,5 +61,22 @@ document.addEventListener("DOMContentLoaded", function() {
           .catch(error => {
               mdViewer.innerHTML = `Error: ${error}`;
           });
+  }
+
+  function addCopyButtons() {
+      document.querySelectorAll('pre').forEach(pre => {
+          const button = document.createElement('button');
+          button.className = 'copy-button';
+          button.textContent = 'Copy';
+          button.addEventListener('click', () => {
+              const code = pre.querySelector('code').innerText;
+              navigator.clipboard.writeText(code).then(() => {
+                  alert('코드가 클립보드에 복사되었습니다.');
+              }).catch(err => {
+                  console.error('Error copying code: ', err);
+              });
+          });
+          pre.appendChild(button);
+      });
   }
 });

@@ -1,5 +1,6 @@
 body {
   font-family: "Roboto", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif";
+  font-size: 16px;
   margin: 0;
   padding: 0;
   display: flex;
@@ -73,4 +74,41 @@ body {
 #md-viewer {
   padding: 20px;
   background: #fff;
+}
+
+/* Custom styling for inline code emphasis */
+code {
+  background-color: #f8f9fa;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 85%;
+  color: #d63384;
+}
+
+/* Styling for preformatted code blocks */
+.hljs {
+  background-color: #f6f8fa !important;
+  padding: 16px;
+  border-radius: 6px;
+  position: relative;
+  overflow: auto;
+}
+
+/* Copy button for code blocks */
+.copy-button {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.copy-button:hover {
+  background-color: #0056b3;
 }
