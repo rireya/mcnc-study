@@ -1,5 +1,5 @@
 async function loadMarkdown(fileName) {
-  const repo = 'your-github-username/markdown-viewer';
+  const repo = 'rireya/mcnc-study';
   const filePath = `docs/md/${fileName}`;
   const url = `https://raw.githubusercontent.com/${repo}/main/${filePath}`;
 
