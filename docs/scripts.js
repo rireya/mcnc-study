@@ -6,7 +6,7 @@ async function loadMarkdown(fileName) {
   const response = await fetch(url);
   const markdown = await response.text();
 
-  const html = marked(markdown);
+  const html = marked.parse(markdown);
   document.getElementById('content').innerHTML = html;
 }
 
