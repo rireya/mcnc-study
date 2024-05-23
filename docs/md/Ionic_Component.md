@@ -41,7 +41,7 @@ export default router;
 
 - **App.vue**
 
-```vue
+```html
 <template>
   <IonApp>
     <IonRouterOutlet />
@@ -56,7 +56,7 @@ import { IonApp, IonRouterOutlet } from '@ionic/vue';
 
 - **HomePage.vue**
 
-```vue
+```html
 <template>
   <IonPage>
     <IonContent>
@@ -91,7 +91,7 @@ const goToAbout = () => {
 
 - **ParentComponent.vue**
 
-```vue
+```html
 <template>
   <IonButton @click="presentModal">Open Modal</IonButton>
 </template>
@@ -114,7 +114,7 @@ const presentModal = async () => {
 
 - **ChildComponent.vue**
 
-```vue
+```html
 <template>
   <IonContent>
     <h1>Modal Content</h1>
@@ -143,7 +143,7 @@ const dismiss = async () => {
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonMenu side="start" content-id="main-content">
     <IonHeader>
@@ -181,7 +181,7 @@ import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonMenuT
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonHeader>
     <IonToolbar>
@@ -214,7 +214,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonFooter } from '@ionic/v
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonButton @click="showAlert">Show Alert</IonButton>
 </template>
@@ -246,7 +246,7 @@ const showAlert = async () => {
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonButton @click="showToast">Show Toast</IonButton>
 </template>
@@ -276,7 +276,7 @@ const showToast = async () => {
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonContent>
     <IonList>
@@ -317,7 +317,7 @@ const loadMoreData = (event: CustomEvent) => {
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonButton @click="presentLoading">Show Loading</IonButton>
 </template>
@@ -352,7 +352,7 @@ const presentLoading = async () => {
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonAccordionGroup>
     <IonAccordion value="first">
@@ -382,7 +382,7 @@ import { IonAccordionGroup, IonAccordion, IonItem, IonLabel } from '@ionic/vue';
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonContent>
     <IonFab vertical="bottom" horizontal="end" slot="fixed">
@@ -410,7 +410,7 @@ import { add } from 'ionicons/icons';
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonContent>
     <IonRefresher slot="fixed" @ionRefresh="doRefresh">
@@ -449,7 +449,7 @@ const doRefresh = (event: CustomEvent) => {
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonContent>
     <IonList>
@@ -489,7 +489,7 @@ const doReorder = (event: CustomEvent) => {
 
 #### 예제
 
-```vue
+```html
 <template>
   <IonContent>
     <IonItem>

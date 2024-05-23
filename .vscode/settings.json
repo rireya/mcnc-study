@@ -1,0 +1,10 @@
+{
+  "liveServer.settings.root": "/docs",
+  "liveServer.settings.port": 5500,
+  "liveServer.settings.customBrowser": "chrome",
+  "liveServer.settings.proxy": {
+    "enable": true,
+    "baseUri": "/mcnc-study",
+    "proxyUri": "http://localhost:5500"
+  }
+}

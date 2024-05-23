@@ -64,7 +64,7 @@ createApp(App)
 
 라우터 링크를 사용하여 페이지 간 이동을 구현합니다. `src/App.vue` 파일을 수정합니다.
 
-```vue
+```html
 <!-- src/App.vue -->
 <template>
   <div id="app">
@@ -165,7 +165,7 @@ export default router;
 
 프로그래밍 방식으로 라우터 경로를 이동하려면 `useRouter` 훅을 사용합니다.
 
-```vue
+```html
 // src/views/Home.vue
 <template>
   <div>
@@ -193,7 +193,7 @@ const goToAbout = () => {
 
 #### 라우터 링크에서 쿼리 매개변수 사용
 
-```vue
+```html
 <!-- src/views/Home.vue -->
 <template>
   <div>
@@ -215,7 +215,7 @@ const goToAboutWithQuery = () => {
 
 #### 쿼리 매개변수 받기
 
-```vue
+```html
 <!-- src/views/About.vue -->
 <template>
   <div>
@@ -253,7 +253,7 @@ const routes: Array<RouteRecordRaw> = [
 
 #### 라우터 링크에서 파라미터 사용
 
-```vue
+```html
 <!-- src/views/Home.vue -->
 <template>
   <div>
@@ -275,7 +275,7 @@ const goToUserDetails = () => {
 
 #### 파라미터 받기
 
-```vue
+```html
 <!-- src/views/Home.vue -->
 <template>
   <div>
