@@ -1,6 +1,6 @@
 async function loadMarkdown(fileName) {
   const repo = 'your-github-username/markdown-viewer';
-  const filePath = `site/docs/${fileName}`;
+  const filePath = `docs/md/${fileName}`;
   const url = `https://raw.githubusercontent.com/${repo}/main/${filePath}`;
 
   const response = await fetch(url);
