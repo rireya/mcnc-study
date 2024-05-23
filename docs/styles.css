@@ -70,11 +70,13 @@ body {
   padding: 20px;
   width: calc(100% - 500px); /* Adjust width to accommodate TOC and sidebar */
   overflow-y: auto;
+  background: #fff;
 }
 
 #md-viewer {
   padding: 20px;
   background: #fff;
+  border-right: 1px solid #ddd; /* Separator line */
 }
 
 /* Custom styling for inline code emphasis */
@@ -122,7 +124,7 @@ code {
   width: 240px;
   height: 100%;
   overflow-y: auto;
-  background-color: #f4f4f4;
+  background: #fff;
   padding: 20px;
   box-shadow: -2px 0 5px rgba(0,0,0,0.1);
 }
