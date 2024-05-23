@@ -273,7 +273,7 @@
     console.log(rest); // { age: 30, city: 'Seoul' }
     ```
 
-## 7-1. Spread/Rest Syntax (...) - 객체 요소
+## 7-1. Spread/Rest Syntax 객체
 
 - **ES6 Spread 객체 요소**:
 

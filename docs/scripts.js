@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
   const links = document.querySelectorAll('.sidebar a');
   const mdViewer = document.getElementById('md-viewer');
+  const toc = document.getElementById('toc');
   const md = window.markdownit({
       html: true, // HTML 태그를 허용하도록 설정
       highlight: function (str, lang) {
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
               mdViewer.innerHTML = renderedHtml;
               document.querySelector('.content').scrollTo(0, 0);
               addCopyButtons();
+              updateTOC();
               // Highlight code blocks
               document.querySelectorAll('pre code').forEach((block) => {
                   hljs.highlightBlock(block);
@@ -79,4 +81,49 @@ document.addEventListener("DOMContentLoaded", function() {
           pre.appendChild(button);
       });
   }
+
+  function updateTOC() {
+      const headers = mdViewer.querySelectorAll('h1, h2, h3, h4');
+      toc.innerHTML = '';
+      const ul = document.createElement('ul');
+      headers.forEach(header => {
+          if (!header.id) {
+              header.id = header.textContent.trim().toLowerCase().replace(/\s+/g, '-');
+          }
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.textContent = header.textContent;
+          a.href = `#${header.id}`;
+          a.style.setProperty('--level', header.tagName.charAt(1) - 1);
+          a.addEventListener('click', function(e) {
+              e.preventDefault();
+              header.scrollIntoView({ behavior: 'smooth' });
+          });
+          li.appendChild(a);
+          ul.appendChild(li);
+      });
+      toc.appendChild(ul);
+  }
+
+  function updateActiveLink() {
+      const headers = mdViewer.querySelectorAll('h1, h2, h3, h4');
+      let lastActive = null;
+      headers.forEach(header => {
+          const rect = header.getBoundingClientRect();
+          if (rect.top <= 10) {
+              lastActive = header;
+          }
+      });
+
+      const links = toc.querySelectorAll('a');
+      links.forEach(link => link.classList.remove('active'));
+      if (lastActive) {
+          const activeLink = toc.querySelector(`a[href="#${lastActive.id}"]`);
+          if (activeLink) {
+              activeLink.classList.add('active');
+          }
+      }
+  }
+
+  document.querySelector('.content').addEventListener('scroll', updateActiveLink);
 });

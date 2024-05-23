@@ -44,7 +44,7 @@ Vue 인스턴스는 생성되고 소멸될 때까지 여러 생명주기 단계�
 - `onBeforeUnmount`: 인스턴스가 마운트 해제되기 전에 호출됩니다.
 - `onUnmounted` **(중요)**: 인스턴스가 마운트 해제된 후에 호출됩니다. (중요)
 
-### 예제
+**예제**
 
 ```html
 <template>
@@ -66,7 +66,7 @@ onUnmounted(() => {
 
 ## 3. 반응형 변수 (ref, reactive)
 
-### ref
+**ref**
 
 단일 원시 값에 대해 반응형 변수를 만듭니다. **(주로 사용됨)**
 
@@ -88,7 +88,7 @@ function addItem() {
 }
 ```
 
-### reactive
+**reactive**
 
 객체에 대해 반응형 변수를 만듭니다.
 
@@ -141,7 +141,7 @@ function handleClick() {
 </script>
 ```
 
-## 5. 조건부 렌더링 (v-if)과 리스트 렌더링 (v-for)
+## 5. 조건부 렌더링과 리스트 렌더링
 
 ### 조건부 렌더링 (v-if)
 

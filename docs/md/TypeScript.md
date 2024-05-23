@@ -49,32 +49,7 @@
     }
     ```
 
-## 2. 고급 타입
-
-- **유니온 타입, 인터섹션 타입, 제네릭, 타입 가드**:
-  - **예시 (유니온 타입)**:
-
-    ```typescript
-    // 이 함수는 'id' 매개변수를 받으며, 'id'는 숫자 또는 문자열 타입
-    function logId(id: number | string) {
-      console.log('ID:', id);
-    }
-    ```
-
-  - **예시 (제네릭)**:
-
-    ```typescript
-    // 입력받은 인자를 그대로 반환하는 제네릭 함수
-    function identity<T>(arg: T): T {
-      return arg;
-    }
-
-    const output1 = identity('myString');  // 타입은 'string'
-    const output2 = identity(42);          // 타입은 'number'
-    const output3 = identity(true);        // 타입은 'boolean'
-    ```
-
-## 3. 기본 타입, any 타입, custom 타입
+## 2. 기본 타입과 custom 타입
 
 - **기본 타입**: `number`, `string`, `boolean`, `null`, `undefined`, `symbol`, `void`
   - **예시 (기본 타입)**:
@@ -102,6 +77,31 @@
       age: number;
     };
     let user: User = { name: 'mcnc', age: 30 };
+    ```
+
+## 3. 고급 타입
+
+- **유니온 타입, 인터섹션 타입, 제네릭, 타입 가드**:
+  - **예시 (유니온 타입)**:
+
+    ```typescript
+    // 이 함수는 'id' 매개변수를 받으며, 'id'는 숫자 또는 문자열 타입
+    function logId(id: number | string) {
+      console.log('ID:', id);
+    }
+    ```
+
+  - **예시 (제네릭)**:
+
+    ```typescript
+    // 입력받은 인자를 그대로 반환하는 제네릭 함수
+    function identity<T>(arg: T): T {
+      return arg;
+    }
+
+    const output1 = identity('myString');  // 타입은 'string'
+    const output2 = identity(42);          // 타입은 'number'
+    const output3 = identity(true);        // 타입은 'boolean'
     ```
 
 ## 4. 배열 타입과 객체 타입

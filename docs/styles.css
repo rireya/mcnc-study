@@ -66,8 +66,9 @@ body {
 
 .content {
   margin-left: 260px;
+  margin-right: 240px; /* Add right margin for TOC */
   padding: 20px;
-  width: calc(100% - 260px);
+  width: calc(100% - 500px); /* Adjust width to accommodate TOC and sidebar */
   overflow-y: auto;
 }
 
@@ -111,4 +112,42 @@ code {
 
 .copy-button:hover {
   background-color: #0056b3;
+}
+
+/* Table of contents */
+.toc {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 240px;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+}
+
+.toc ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.toc ul li {
+  margin: 0.5em 0;
+}
+
+.toc ul li a {
+  text-decoration: none;
+  color: #666;
+  display: block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75em; /* Smaller font size */
+  padding-left: calc(5px + var(--level, 0) * 10px); /* Indent based on level */
+}
+
+.toc ul li a.active {
+  background-color: #d3d3d3;
+  color: #000;
 }

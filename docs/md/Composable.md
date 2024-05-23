@@ -3,9 +3,7 @@
 
 Composable 함수는 Vue 3의 Composition API에서 재사용 가능한 기능을 제공하는 함수입니다. 이러한 함수는 Vue의 반응성을 활용하여 다양한 컴포넌트에서 공통 기능을 쉽게 공유할 수 있도록 합니다.
 
-## Vuex Store와 Vue Router을 유틸로 사용을 위한 Composable
-
-### 3. Store Composable 작성
+## 1. Composable 작성 예시
 
 `useStore`라는 이름의 composable을 작성합니다. 이 함수는 Vuex store에 접근하고 상태 값을 쉽게 가져오고 업데이트할 수 있도록 합니다.
 
@@ -63,7 +61,7 @@ export { useStore } from './useStore';
 export { useRouter } from './useRouter';
 ```
 
-### 4. Store Composable 사용
+## 2. Composable 사용 예시
 
 이제 이 composable을 컴포넌트에서 사용할 수 있습니다. 예를 들어, 상태 값을 표시하고 업데이트할 수 있는 컴포넌트를 작성합니다.
 

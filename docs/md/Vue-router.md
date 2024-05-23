@@ -45,7 +45,7 @@ const router = createRouter({
 export default router;
 ```
 
-### 3-2. 라우터를 Vue 애플리케이션에 추가
+### 3-2. 라우터 추가
 
 이제 생성한 라우터를 Vue 애플리케이션에 추가합니다. `src/main.ts` 파일을 수정합니다.
 
@@ -185,13 +185,13 @@ const goToAbout = () => {
 </script>
 ```
 
-## 6. 라우터 경로 이동시 데이터 전달 (query와 params)
+## 6. 라우터 경로 이동시 데이터 전달
 
 ### 6-1. Query 사용
 
 쿼리 매개변수를 사용하여 데이터를 전달할 수 있습니다.
 
-#### 라우터 링크에서 쿼리 매개변수 사용
+**라우터 링크에서 쿼리 매개변수 사용**
 
 ```html
 <!-- src/views/Home.vue -->
@@ -213,7 +213,7 @@ const goToAboutWithQuery = () => {
 </script>
 ```
 
-#### 쿼리 매개변수 받기
+**쿼리 매개변수 받기**
 
 ```html
 <!-- src/views/About.vue -->
@@ -237,7 +237,7 @@ const ref = route.query.ref;
 
 URL 파라미터를 사용하여 데이터를 전달할 수 있습니다.
 
-#### 라우터 설정
+**라우터 설정**
 
 ```typescript
 // src/router/index.ts
@@ -251,7 +251,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 ```
 
-#### 라우터 링크에서 파라미터 사용
+**라우터 링크에서 파라미터 사용**
 
 ```html
 <!-- src/views/Home.vue -->
@@ -273,7 +273,7 @@ const goToUserDetails = () => {
 </script>
 ```
 
-#### 파라미터 받기
+**파라미터 받기**
 
 ```html
 <!-- src/views/Home.vue -->

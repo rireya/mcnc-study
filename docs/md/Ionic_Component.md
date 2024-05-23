@@ -4,7 +4,7 @@
 
 ### [**router-outlet**](https://ionicframework.com/docs/api/router-outlet)
 
-#### 설명
+**설명**
 
 `ion-router-outlet`은 라우팅을 통해 페이지 간의 내비게이션을 관리하는 데 사용됩니다. Vue Router와 함께 사용하여 페이지 전환을 처리합니다. 또한 Ionic 라이프 사이클 이벤트를 통해 페이지 상태를 관리할 수 있습니다.
 
@@ -15,7 +15,7 @@
 - `ionViewWillLeave`: 페이지가 비활성화되기 직전에 호출됩니다.
 - `ionViewDidLeave`: 페이지가 비활성화된 후에 호출됩니다.
 
-#### 예제
+**예제**
 
 - **src/router/index.ts**
 
@@ -83,11 +83,11 @@ const goToAbout = () => {
 
 ### [**modal**](https://ionicframework.com/docs/api/modal)
 
-#### 설명
+**설명**
 
 `ion-modal`는 사용자가 특정 작업을 완료하도록 하는 데 사용되는 오버레이 창입니다.
 
-#### 예제
+**예제**
 
 - **ParentComponent.vue**
 
@@ -137,11 +137,11 @@ const dismiss = async () => {
 
 ### [**menu**](https://ionicframework.com/docs/api/menu)
 
-#### 설명
+**설명**
 
 `ion-menu`는 사이드바 내비게이션을 제공하는 컴포넌트로, 주요 내비게이션 링크를 담는 데 사용됩니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -173,13 +173,13 @@ import { IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonMenuT
 
 ### [**header, content, footer**](https://ionicframework.com/docs/api/header)
 
-#### 설명
+**설명**
 
 - `ion-header`는 페이지의 상단에 고정된 영역으로, 보통 제목이나 주요 내비게이션 요소를 포함합니다.
 - `ion-content`는 화면의 주된 스크롤 가능한 영역을 정의합니다. 보통 페이지의 주요 내용을 감싸는 데 사용됩니다.
 - `ion-footer`는 페이지의 하단에 고정된 영역으로, 보통 보조 내비게이션이나 기타 정보를 포함합니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -208,11 +208,11 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonFooter } from '@ionic/v
 
 ### [**alert**](https://ionicframework.com/docs/api/alert)
 
-#### 설명
+**설명**
 
 `ion-alert`는 사용자에게 중요한 메시지를 보여주는 팝업 창입니다. 주로 경고, 정보, 확인 등의 목적으로 사용됩니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -240,11 +240,11 @@ const showAlert = async () => {
 
 ### [**toast**](https://ionicframework.com/docs/api/toast)
 
-#### 설명
+**설명**
 
 `ion-toast`는 짧은 메시지를 화면 하단에 잠깐 동안 표시합니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -270,11 +270,11 @@ const showToast = async () => {
 
 ### [**infinite-scroll**](https://ionicframework.com/docs/api/infinite-scroll)
 
-#### 설명
+**설명**
 
 `ion-infinite-scroll`는 스크롤을 내릴 때 추가 데이터를 로드하는 기능을 제공합니다. 주로 목록이나 피드와 같은 긴 콘텐츠를 표시할 때 사용됩니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -310,12 +310,12 @@ const loadMoreData = (event: CustomEvent) => {
 
 ### [**loading**](https://ionicframework.com/docs/api/loading)
 
-#### 설명
+**설명**
 
 - `ion-loading`은 작업이 진행 중임을 시각적으로 표시하는 데 사용됩니다.
 - `ion-spinner`는 다양한 스타일의 스피너를 제공하여 로딩 상태를 표시할 수 있습니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -346,11 +346,11 @@ const presentLoading = async () => {
 
 ### [**accordion**](https://ionicframework.com/docs/api/accordion)
 
-#### 설명
+**설명**
 
 `ion-accordion`는 여러 패널을 포함하는 컴포넌트로, 각 패널은 클릭 시 확장되거나 축소됩니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -376,11 +376,11 @@ import { IonAccordionGroup, IonAccordion, IonItem, IonLabel } from '@ionic/vue';
 
 ### [**fab (Floating Action Button)**](https://ionicframework.com/docs/api/fab)
 
-#### 설명
+**설명**
 
 `ion-fab`는 화면에 떠 있는 버튼으로, 주로 중요한 액션을 강조하기 위해 사용됩니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -404,11 +404,11 @@ import { add } from 'ionicons/icons';
 
 ### [**refresher**](https://ionicframework.com/docs/api/refresher)
 
-#### 설명
+**설명**
 
 `ion-refresher`는 사용자가 스크롤을 당겨서 콘텐츠를 새로 고치는 기능을 제공합니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -443,11 +443,11 @@ const doRefresh = (event: CustomEvent) => {
 
 ### [**reorder**](https://ionicframework.com/docs/api/reorder)
 
-#### 설명
+**설명**
 
 `ion-reorder`는 목록 아이템의 순서를 드래그 앤 드롭으로 변경할 수 있는 기능을 제공합니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>
@@ -483,11 +483,11 @@ const doReorder = (event: CustomEvent) => {
 
 ### [**datetime**](https://ionicframework.com/docs/api/datetime)
 
-#### 설명
+**설명**
 
 `ion-datetime`은 날짜와 시간을 선택할 수 있는 입력 필드를 제공합니다.
 
-#### 예제
+**예제**
 
 ```html
 <template>

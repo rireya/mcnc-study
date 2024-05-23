@@ -207,7 +207,7 @@ getters: {
 },
 ```
 
-### 4-4. 컴포넌트에서 액션과 게터 사용하기
+### 4-4. 컴포넌트에서 액션과 게터
 
 ```html
 <!-- components/CounterWithActions.vue -->
