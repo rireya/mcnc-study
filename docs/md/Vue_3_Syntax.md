@@ -46,7 +46,7 @@ Vue 인스턴스는 생성되고 소멸될 때까지 여러 생명주기 단계�
 
 **예제**
 
-```html
+```vue
 <template>
   <div>Life Cycle</div>
 </template>
@@ -111,7 +111,7 @@ function increment() {
 
 데이터 바인딩에 사용되는 {{ }}는 Vue.js에서 템플릿 내에 데이터를 삽입하는 방식으로, 변수의 값을 화면에 출력합니다.
 
-```html
+```vue
 <template>
   <div>
     <p>{{ message }}</p>
@@ -129,7 +129,7 @@ const message = ref('Hello, Vue 3!');
 
 Vue에서는 `@click` 디렉티브를 사용하여 클릭 이벤트 리스너를 설정할 수 있습니다.
 
-```html
+```vue
 <template>
   <button @click="handleClick">Click me</button>
 </template>
@@ -147,7 +147,7 @@ function handleClick() {
 
 조건에 따라 엘리먼트를 렌더링합니다.
 
-```html
+```vue
 <template>
   <p v-if="isVisible">This is visible</p>
   <p v-else>This is hidden</p>
@@ -164,7 +164,7 @@ const isVisible = ref(true);
 
 리스트를 반복하여 엘리먼트를 렌더링합니다.
 
-```html
+```vue
 <template>
   <div>
     <ul>
@@ -231,7 +231,7 @@ function increment() {
 
 **불필요한 watch 사용**
 
-```html
+```vue
 <template>
   <div>{{ doubleCount }}</div> <!-- count가 변경될 때 doubleCount도 자동으로 업데이트 -->
   <button @click="increment">Add</button>
@@ -255,7 +255,7 @@ function increment() {
 
 **computed를 사용하여 watch 대체**
 
-```html
+```vue
 <template>
   <div>{{ doubleCount }}</div> <!-- count가 변경될 때 doubleCount도 자동으로 업데이트 -->
   <button @click="increment">Add</button>

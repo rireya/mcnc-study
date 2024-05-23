@@ -65,7 +65,7 @@ export { useRouter } from './useRouter';
 
 이제 이 composable을 컴포넌트에서 사용할 수 있습니다. 예를 들어, 상태 값을 표시하고 업데이트할 수 있는 컴포넌트를 작성합니다.
 
-```html
+```vue
 <!-- src/components/StoreComponent.vue -->
 <template>
   <div>

@@ -7,7 +7,7 @@
 
 **ChildComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <p>자식 컴포넌트입니다. 이름: {{ props.string }}</p>
@@ -32,7 +32,7 @@ const props = defineProps({
 
 **ParentComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <p>부모 컴포넌트입니다.</p>
@@ -53,7 +53,7 @@ Props는 부모 컴포넌트에서 자식 컴포넌트로 데이터를 전달하
 
 **ChildComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <button @click="sendMessage">메시지 보내기</button>
@@ -72,7 +72,7 @@ const sendMessage = () => {
 
 **ParentComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <p>부모 컴포넌트입니다.</p>
@@ -95,7 +95,7 @@ Provide/Inject는 조상 컴포넌트에서 후손 컴포넌트로 데이터를 
 
 **GrandparentComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <p>조상 컴포넌트입니다.</p>
@@ -113,7 +113,7 @@ provide('sharedData', '조상에서 제공된 데이터');
 
 **ParentComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <p>부모 컴포넌트입니다.</p>
@@ -128,7 +128,7 @@ import ChildComponent from './ChildComponent.vue';
 
 **ChildComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <p>자식 컴포넌트입니다. 공유 데이터: {{ sharedData }}</p>
@@ -148,7 +148,7 @@ const sharedData = inject<string>('sharedData');
 
 **ChildComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <p>자식 컴포넌트입니다.</p>
@@ -168,7 +168,7 @@ defineExpose({
 
 **ParentComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <p>부모 컴포넌트입니다.</p>
@@ -195,7 +195,7 @@ Scoped CSS는 특정 컴포넌트에만 CSS를 적용하는 방법입니다.
 
 **ScopedComponent.vue**
 
-```html
+```vue
 <template>
   <div class="scoped-style">
     <p>이 스타일은 이 컴포넌트에만 적용됩니다.</p>
@@ -222,7 +222,7 @@ Slot은 부모 컴포넌트에서 자식 컴포넌트로 콘텐츠를 전달하�
 
 **ChildComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <slot>기본 콘텐츠</slot> <!-- 부모가 전달하지 않았을 때 표시될 기본 콘텐츠 -->
@@ -235,7 +235,7 @@ Slot은 부모 컴포넌트에서 자식 컴포넌트로 콘텐츠를 전달하�
 
 **ParentComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <ChildComponent>
@@ -255,7 +255,7 @@ import ChildComponent from './ChildComponent.vue';
 
 **ChildComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <slot name="header">기본 헤더</slot>
@@ -270,7 +270,7 @@ import ChildComponent from './ChildComponent.vue';
 
 **ParentComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <ChildComponent>
@@ -296,7 +296,7 @@ import ChildComponent from './ChildComponent.vue';
 
 **ChildComponent.vue**
 
-```html
+```vue
 <template>
   <div>
     <slot :message="message"></slot> <!-- message 변수를 슬롯에 전달 -->
@@ -312,7 +312,7 @@ const message = '안녕하세요, 부모님!';
 
 슬롯 Props는 자식 컴포넌트에서 데이터를 부모 컴포넌트로 전달하는 방법입니다.
 
-```html
+```vue
 <template>
   <div>
     <ChildComponent>
