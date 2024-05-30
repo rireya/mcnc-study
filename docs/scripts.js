@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
                           e.preventDefault();
                           const url = link.getAttribute('href');
                           navigator.clipboard.writeText(url).then(() => {
-                              alert('URL이 클립보드에 복사되었습니다: ' + url);
+                              alert('URL이 클립보드에 복사되었습니다:\n' + url);
                           }).catch(err => {
                               console.error('Error copying URL: ', err);
                           });
