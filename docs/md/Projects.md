@@ -2,12 +2,28 @@
 
 ## bizMOB4 Base Project
 
-- Vue 3 + TypeScript + Vuex + Vue-router + ionic으로 구성된 Base 프로젝트
+Vue3를 기반으로 제작된 bizMOB Base 프로젝트
 
 [http://svn.mcnc.co.kr/svn/web_client_lib/trunk/bizMOB4Vue](http://svn.mcnc.co.kr/svn/web_client_lib/trunk/bizMOB4Vue)
 
-## bizMOB4-SI 프로젝트
+- vue3
+- vue/cli-service
+- vuex (pinia를 사용하더라도 삭제하면 안됨)
+- vue-router
+- ionic/vue
+- ionic/vue-router
+- moment
+- sass
+- typescript
 
-- Base를 기반으로 기본적인 공통 함수 및 샘플 화면이 추가된 프로젝트
+## bizMOB4-SI Project
+
+Base를 기반으로 기본적인 공통 함수 및 샘플 화면이 추가된 프로젝트
 
 [http://svn.mcnc.co.kr/svn/web_client_lib/trunk/bizMOB4Vue-SI](http://svn.mcnc.co.kr/svn/web_client_lib/trunk/bizMOB4Vue-SI)
+
+## bizMOB4 Base Publishing Project
+
+bizMOB4에 맞춘 퍼블리싱 Base 프로젝트
+
+[http://svn.mcnc.co.kr/svn/mcnc_design/trunk/mcnc_project/bizMOB4_base_publishing](http://svn.mcnc.co.kr/svn/mcnc_design/trunk/mcnc_project/bizMOB4_base_publishing)
