@@ -10,10 +10,10 @@
 
 #### 주요 라이프 사이클 이벤트
 
-- `onIonViewWillEnter`: 페이지가 활성화되기 직전에 호출됩니다.
-- `onIonViewDidEnter`: 페이지가 활성화된 후에 호출됩니다.
-- `onIonViewWillLeave`: 페이지가 비활성화되기 직전에 호출됩니다.
-- `onIonViewDidLeave`: 페이지가 비활성화된 후에 호출됩니다.
+- `onIonViewWillEnter`: 페이지 Open 직전에 호출됩니다. (화면을 back 해서 진입해도 호출됨)
+- `onIonViewDidEnter`: 페이지 Open 후에 호출됩니다. (화면을 back 해서 진입해도 호출됨)
+- `onIonViewWillLeave`: 페이지 Back 직전에 호출됩니다.
+- `onIonViewDidLeave`: 페이지 Back 후에 호출됩니다.
 
 ```ts
 import { onIonViewDidEnter } from '@ionic/vue';
