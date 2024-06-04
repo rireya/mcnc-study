@@ -10,10 +10,18 @@
 
 #### 주요 라이프 사이클 이벤트
 
-- `ionViewWillEnter`: 페이지가 활성화되기 직전에 호출됩니다.
-- `ionViewDidEnter`: 페이지가 활성화된 후에 호출됩니다.
-- `ionViewWillLeave`: 페이지가 비활성화되기 직전에 호출됩니다.
-- `ionViewDidLeave`: 페이지가 비활성화된 후에 호출됩니다.
+- `onIonViewWillEnter`: 페이지가 활성화되기 직전에 호출됩니다.
+- `onIonViewDidEnter`: 페이지가 활성화된 후에 호출됩니다.
+- `onIonViewWillLeave`: 페이지가 비활성화되기 직전에 호출됩니다.
+- `onIonViewDidLeave`: 페이지가 비활성화된 후에 호출됩니다.
+
+```ts
+import { onIonViewDidEnter } from '@ionic/vue';
+
+onIonViewDidEnter(() => {
+    console.log('onIonViewDidEnter');
+});
+```
 
 **예제**
 
