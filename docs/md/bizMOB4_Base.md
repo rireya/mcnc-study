@@ -66,14 +66,34 @@ deploy 명령어로 실행시 NODE_ENV가 production로 설정되기 때문에 �
 - npm run build-prod:major : .env.prod | release 환경 | 메이저 컨텐츠 build
 - npm run build-prod:minor : .env.prod | release 환경 | 마이너 컨텐츠 build
 
-## Mock 데이터 호출
+## bizMOB Typescript Handler 호출
 
-- API 호출시 `_bMock: true`로 요청
+javaScript로 구현된 bizMOB 서비스를 Typescript 형식으로 사용할 수 있도록 하는 Handler
+
+```plaintext
+src/
+└── bizMOB/
+    └── Xross/
+        ├── App.ts          - 애플리케이션 초기 설정 및 실행 관련 코드
+        ├── Contacts.ts     - 연락처 처리 관련 기능
+        ├── Database.ts     - 데이터베이스 액세스 및 관리 기능
+        ├── Device.ts       - 디바이스 하드웨어 정보 접근 기능
+        ├── Event.ts        - 이벤트 관리 및 처리
+        ├── File.ts         - 파일 시스템 접근 및 관리
+        ├── Localization.ts - 다국어 지원 기능
+        ├── Logger.ts       - 로깅 및 오류 추적 기능
+        ├── Network.ts      - 네트워크 요청 및 응답 처리
+        ├── Properties.ts   - 프로퍼티 및 설정 파일 관리
+        ├── Push.ts         - 푸시 알림 기능
+        ├── Storage.ts      - 로컬 데이터 저장 및 관리
+        ├── System.ts       - 시스템 관련 기능
+        └── Window.ts       - 윈도우 및 UI 관리
+```
 
 ```ts
 import Network from '@/bizMOB/Xross/Network';
 
-const onBizMOBRequestTr = async() => {
+const onBizMOBReqTr = async() => {
     const res: any = await Network.requestTr({
         _bMock: true, // mock 데이터 호출 여부
         _sTrcode: 'DM0002',
@@ -87,14 +107,15 @@ const onBizMOBRequestTr = async() => {
 };
 ```
 
-- Network Mock 데이터 위치: `public/mock/[Trcode].json`
-- Native API Mock 데이터 위치: `public/mock/bizMOB/**/*.json`
+### bizMOB JWT Token 통신
 
-## bizMOB 암호화 통신
+- (작성 예정)
+
+### bizMOB 암호화 통신
 
 - Web과 App에서 암호화 통신을 하는 방법에 차이가 있음
   - **App**: Native에 App 빌드시 암호화 여부를 요청시 Native에서 처리
-  - **Web**: Client에서 암호화 키 발급과 갱신 처리를 추가해야 함
+  - **Web**: Client에서 암호화 키 발급과 갱신 처리를 추가해야  함
 - Web에서 암호화 통신을 ON 하기 위해서는 .env파일에 있는 `VUE_APP_ENCRYPTION_USE` 변수를 `'true'` 로 변경
 - Web에서 암호화 통신에 사용될 키와 토큰 발급을 위해는 `bizMOB BzCrypto`의 `shareAuthKey` 호출
 
@@ -142,7 +163,7 @@ const renewAuthToken = async () => {
   - **`EAH000`**: 서버의 세션이 만료. 키 재발급 필요 (shareAuthKey)
   - **`EAH001`**: 암호화 인증 토큰 만료. 토큰 갱신 필요 (renewAuthToken)
 
-## bizMOB Native i18n 값 셋팅
+### bizMOB Native i18n 값 셋팅
 
 - 다국어 처리를 해야 하는 경우 bizMOB의 `LocaleService`를 통해서 Native의 다국어 코드를 수정할 수 있음
 - 초기화를 해야 할 경우 `LocaleService`의 `initLocale` 호출
@@ -180,3 +201,53 @@ const onLocaleService = async() => {
     console.log(await localeService.getLocale()); // {result: true, locale: 'ko-KR'}
 };
 ```
+
+### GlobalShared Data
+
+- bizMOB 내부에 구현된 Vuex를 이용한 상태관리 공용 모듈
+- Vuex 또는 Pinia를 따로 셋팅해서 사용하고 싶지 않다면 해당 서비스 이용
+- 해당 변수는 sessionStorage나 localStorage에 저장되지 않기 때문에 Storage 저장이 필요한 경우 추가 작업 필요
+
+```ts
+// README.vue
+import { GlobalDataService } from '@/bizMOB/Service';
+
+const globalDataService = GlobalDataService();
+
+const onGlobalDataService = () => {
+    globalDataService.setGlobalDataByKey('foo', 'bar'); // 저장 (sessionStorage)
+
+    console.log(globalDataService.getGlobalDataByKey('foo')); // bar
+};
+```
+
+### Mock 데이터 호출
+
+- API 호출시 `_bMock: true`로 요청
+
+```ts
+import Network from '@/bizMOB/Xross/Network';
+
+const onBizMOBReqTr = async() => {
+    const res: any = await Network.requestTr({
+        _bMock: true, // mock 데이터 호출 여부
+        _sTrcode: 'DM0002',
+        _oBody: {
+            startIndex: 0,
+            endIndex: 9
+        },
+    });
+
+    console.log(res);
+};
+```
+
+- Network Mock 데이터 위치: `public/mock/[Trcode].json`
+- Native API Mock 데이터 위치: `public/mock/bizMOB/**/*.json`
+
+## 개발시 주의 사항
+
+- 웹페이지 B2C 개발시 SEO 고려해야 함
+
+- 외부 라이브러리를 사용할 때, ES5 까지만 지원하는 모바일에서 추가 확인 필요 (iOS 13 미만)
+  - 기본적으로 ES5 타겟으로 빌드시 빌드가 되지만 ES6만 지원하고 ES5 지원은 없거나 다른 패키지를 import 해야할 수도 있음
