@@ -66,6 +66,13 @@ deploy 명령어로 실행시 NODE_ENV가 production로 설정되기 때문에 �
 - npm run build-prod:major : .env.prod | release 환경 | 메이저 컨텐츠 build
 - npm run build-prod:minor : .env.prod | release 환경 | 마이너 컨텐츠 build
 
+## 개발시 주의 사항
+
+- 웹페이지 B2C 개발시 SEO 고려해야 함
+
+- 외부 라이브러리를 사용할 때, ES5 까지만 지원하는 모바일에서 추가 확인 필요 (iOS 13 미만)
+  - 기본적으로 ES5 타겟으로 빌드시 빌드가 되지만 ES6만 지원하고 ES5 지원은 없거나 다른 패키지를 import 해야할 수도 있음
+
 ## bizMOB Typescript Handler 호출
 
 javaScript로 구현된 bizMOB 서비스를 Typescript 형식으로 사용할 수 있도록 하는 Handler
@@ -74,21 +81,119 @@ javaScript로 구현된 bizMOB 서비스를 Typescript 형식으로 사용할 �
 src/
 └── bizMOB/
     └── Xross/
-        ├── App.ts          - 애플리케이션 초기 설정 및 실행 관련 코드
-        ├── Contacts.ts     - 연락처 처리 관련 기능
-        ├── Database.ts     - 데이터베이스 액세스 및 관리 기능
-        ├── Device.ts       - 디바이스 하드웨어 정보 접근 기능
-        ├── Event.ts        - 이벤트 관리 및 처리
-        ├── File.ts         - 파일 시스템 접근 및 관리
-        ├── Localization.ts - 다국어 지원 기능
-        ├── Logger.ts       - 로깅 및 오류 추적 기능
-        ├── Network.ts      - 네트워크 요청 및 응답 처리
-        ├── Properties.ts   - 프로퍼티 및 설정 파일 관리
-        ├── Push.ts         - 푸시 알림 기능
-        ├── Storage.ts      - 로컬 데이터 저장 및 관리
-        ├── System.ts       - 시스템 관련 기능
-        └── Window.ts       - 윈도우 및 UI 관리
+        ├── App.ts
+        │   - callPlugIn
+        │   - exit
+        │   - getTimeout
+        │   - setTimeout
+        │   - hideSplash
+        ├── Contacts.ts
+        │   - get
+        ├── Database.ts
+        │   - beginTransaction
+        │   - closeDatabase
+        │   - commitTransaction
+        │   - executeBatchSql
+        │   - executeSelect
+        │   - executeSql
+        │   - openDatabase
+        │   - rollbackTransaction
+        ├── Device.ts
+        │   - getInfo
+        │   - isApp
+        │   - isWeb
+        │   - isMobile
+        │   - isPC
+        │   - isAndroid
+        │   - isIOS
+        │   - isTablet
+        │   - isPhone
+        ├── Event.ts
+        │   - setEvent
+        │   - clearEvent
+        ├── File.ts
+        │   - copy
+        │   - directory
+        │   - download
+        │   - exist
+        │   - getInfo
+        │   - move
+        │   - open
+        │   - remove
+        │   - resizeImage
+        │   - rotateImage
+        │   - unzip
+        │   - upload
+        │   - zip
+        ├── Localization.ts
+        │   - getLocale
+        │   - setLocale
+        ├── Logger.ts
+        │   - info
+        │   - log
+        │   - warn
+        │   - debug
+        │   - error
+        ├── Network.ts
+        │   - changeLocale
+        │   - requestLogin
+        │   - requestTr
+        │   - requestHttp
+        │   - requestApi
+        ├── Properties.ts
+        │   - get
+        │   - remove
+        │   - set
+        │   - setList
+        ├── Push.ts
+        │   - getAlarm
+        │   - getMessageList
+        │   - getPushKey
+        │   - getUnreadCount
+        │   - readMessage
+        │   - readReceiptMessage
+        │   - registerToServer
+        │   - reset
+        │   - sendMessage
+        │   - setAlarm
+        │   - setBadgeCount
+        ├── Storage.ts
+        │   - get
+        │   - remove
+        │   - set
+        │   - setList
+        ├── System.ts
+        │   - callBrowser
+        │   - callCamera
+        │   - callGallery
+        │   - callMap
+        │   - callSMS
+        │   - callTEL
+        │   - getGPS
+        └── Window.ts
+            - openSignPad
+            - openCodeReader
+            - openFileExplorer
+            - openImageViewer
 ```
+
+```ts
+import File from '@/bizMOB/Xross/File';
+
+const onBizMOB = async() => {
+    const res: any = await File.copy({
+        _sSourcePath: '{external}/document/temp.png', // 복사할 파일의 경로
+        _sTargetPath: '{external}/app/temp.png', // 복사될 경로
+        _bMock: false, // Mock 데이터 사용 여부
+    });
+
+    console.log(res);
+};
+```
+
+### Mock 데이터 호출
+
+- API 호출시 `_bMock: true`로 요청
 
 ```ts
 import Network from '@/bizMOB/Xross/Network';
@@ -106,6 +211,9 @@ const onBizMOBReqTr = async() => {
     console.log(res);
 };
 ```
+
+- Network Mock 데이터 위치: `public/mock/[Trcode].json`
+- Native API Mock 데이터 위치: `public/mock/bizMOB/**/*.json`
 
 ### bizMOB JWT Token 통신
 
@@ -220,34 +328,3 @@ const onGlobalDataService = () => {
     console.log(globalDataService.getGlobalDataByKey('foo')); // bar
 };
 ```
-
-### Mock 데이터 호출
-
-- API 호출시 `_bMock: true`로 요청
-
-```ts
-import Network from '@/bizMOB/Xross/Network';
-
-const onBizMOBReqTr = async() => {
-    const res: any = await Network.requestTr({
-        _bMock: true, // mock 데이터 호출 여부
-        _sTrcode: 'DM0002',
-        _oBody: {
-            startIndex: 0,
-            endIndex: 9
-        },
-    });
-
-    console.log(res);
-};
-```
-
-- Network Mock 데이터 위치: `public/mock/[Trcode].json`
-- Native API Mock 데이터 위치: `public/mock/bizMOB/**/*.json`
-
-## 개발시 주의 사항
-
-- 웹페이지 B2C 개발시 SEO 고려해야 함
-
-- 외부 라이브러리를 사용할 때, ES5 까지만 지원하는 모바일에서 추가 확인 필요 (iOS 13 미만)
-  - 기본적으로 ES5 타겟으로 빌드시 빌드가 되지만 ES6만 지원하고 ES5 지원은 없거나 다른 패키지를 import 해야할 수도 있음
