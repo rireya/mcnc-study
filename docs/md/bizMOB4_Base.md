@@ -77,106 +77,6 @@ deploy 명령어로 실행시 NODE_ENV가 production로 설정되기 때문에 �
 
 javaScript로 구현된 bizMOB 서비스를 Typescript 형식으로 사용할 수 있도록 하는 Handler
 
-```plaintext
-src/
-└── bizMOB/
-    └── Xross/
-        ├── App.ts
-        │   - callPlugIn
-        │   - exit
-        │   - getTimeout
-        │   - setTimeout
-        │   - hideSplash
-        ├── Contacts.ts
-        │   - get
-        ├── Database.ts
-        │   - beginTransaction
-        │   - closeDatabase
-        │   - commitTransaction
-        │   - executeBatchSql
-        │   - executeSelect
-        │   - executeSql
-        │   - openDatabase
-        │   - rollbackTransaction
-        ├── Device.ts
-        │   - getInfo
-        │   - isApp
-        │   - isWeb
-        │   - isMobile
-        │   - isPC
-        │   - isAndroid
-        │   - isIOS
-        │   - isTablet
-        │   - isPhone
-        ├── Event.ts
-        │   - setEvent
-        │   - clearEvent
-        ├── File.ts
-        │   - copy
-        │   - directory
-        │   - download
-        │   - exist
-        │   - getInfo
-        │   - move
-        │   - open
-        │   - remove
-        │   - resizeImage
-        │   - rotateImage
-        │   - unzip
-        │   - upload
-        │   - zip
-        ├── Localization.ts
-        │   - getLocale
-        │   - setLocale
-        ├── Logger.ts
-        │   - info
-        │   - log
-        │   - warn
-        │   - debug
-        │   - error
-        ├── Network.ts
-        │   - changeLocale
-        │   - requestLogin
-        │   - requestTr
-        │   - requestHttp
-        │   - requestApi
-        ├── Properties.ts
-        │   - get
-        │   - remove
-        │   - set
-        │   - setList
-        ├── Push.ts
-        │   - getAlarm
-        │   - getMessageList
-        │   - getPushKey
-        │   - getUnreadCount
-        │   - readMessage
-        │   - readReceiptMessage
-        │   - registerToServer
-        │   - reset
-        │   - sendMessage
-        │   - setAlarm
-        │   - setBadgeCount
-        ├── Storage.ts
-        │   - get
-        │   - remove
-        │   - set
-        │   - setList
-        ├── System.ts
-        │   - callBrowser
-        │   - callCamera
-        │   - callGallery
-        │   - callMap
-        │   - callSMS
-        │   - callTEL
-        │   - getGPS
-        └── Window.ts
-            - openSignPad
-            - openCodeReader
-            - openFileExplorer
-            - openImageViewer
-```
-
 ```ts
 import File from '@/bizMOB/Xross/File';
 
@@ -327,4 +227,119 @@ const onGlobalDataService = () => {
 
     console.log(globalDataService.getGlobalDataByKey('foo')); // bar
 };
+```
+
+### 클래스별 지원 함수
+
+```plaintext
+src/
+└ bizMOB/
+    └ Xross/
+        ├─ App.ts
+        │     callPlugIn
+        │     exit
+        │     getTimeout
+        │     setTimeout
+        │     hideSplash
+        │
+        ├─ Contacts.ts
+        │     get
+        │
+        ├─ Database.ts
+        │     beginTransaction
+        │     closeDatabase
+        │     commitTransaction
+        │     executeBatchSql
+        │     executeSelect
+        │     executeSql
+        │     openDatabase
+        │     rollbackTransaction
+        │
+        ├─ Device.ts
+        │     getInfo
+        │     isApp
+        │     isWeb
+        │     isMobile
+        │     isPC
+        │     isAndroid
+        │     isIOS
+        │     isTablet
+        │     isPhone
+        │
+        ├─ Event.ts
+        │     setEvent
+        │     clearEvent
+        │
+        ├─ File.ts
+        │     copy
+        │     directory
+        │     download
+        │     exist
+        │     getInfo
+        │     move
+        │     open
+        │     remove
+        │     resizeImage
+        │     rotateImage
+        │     unzip
+        │     upload
+        │     zip
+        │
+        ├─ Localization.ts
+        │     getLocale
+        │     setLocale
+        │
+        ├─ Logger.ts
+        │     info
+        │     log
+        │     warn
+        │     debug
+        │     error
+        │
+        ├─ Network.ts
+        │     changeLocale
+        │     requestLogin
+        │     requestTr
+        │     requestHttp
+        │     requestApi
+        │
+        ├─ Properties.ts
+        │     get
+        │     remove
+        │     set
+        │     setList
+        │
+        ├─ Push.ts
+        │     getAlarm
+        │     getMessageList
+        │     getPushKey
+        │     getUnreadCount
+        │     readMessage
+        │     readReceiptMessage
+        │     registerToServer
+        │     reset
+        │     sendMessage
+        │     setAlarm
+        │     setBadgeCount
+        │
+        ├─ Storage.ts
+        │     get
+        │     remove
+        │     set
+        │     setList
+        │
+        ├─ System.ts
+        │     callBrowser
+        │     callCamera
+        │     callGallery
+        │     callMap
+        │     callSMS
+        │     callTEL
+        │     getGPS
+        │
+        └─ Window.ts
+               openSignPad
+               openCodeReader
+               openFileExplorer
+               openImageViewer
 ```

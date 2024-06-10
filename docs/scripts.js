@@ -7,9 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
       highlight: function (str, lang) {
           if (lang && hljs.getLanguage(lang)) {
               try {
-                  return '<pre class="hljs"><code>' +
-                         hljs.highlight(str, { language: lang }).value +
-                         '</code></pre>';
+                  return '<pre class="hljs"><code>' + hljs.highlight(str, { language: lang }).value + '</code></pre>';
               } catch (__) {}
           }
 
