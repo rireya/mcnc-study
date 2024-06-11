@@ -28,12 +28,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/Home.vue')
+    component: () => import(/* webpackChunkName: "app" */ '@/views/Home.vue')
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import('@/views/About.vue')
+    component: () => import(/* webpackChunkName: "app" */ '@/views/About.vue')
   }
 ];
 
@@ -53,9 +53,11 @@ export default router;
 // src/main.ts
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router';
+import store from '@/store';
+import router from '@/router';
 
 createApp(App)
+  .use(store)
   .use(router)
   .mount('#app');
 ```
@@ -115,7 +117,7 @@ export default homeRoutes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/Home.vue')
+    component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
   }
 ];
 ```
@@ -128,7 +130,7 @@ export default aboutRoutes: Array<RouteRecordRaw> = [
   {
     path: '/about',
     name: 'About',
-    component: () => import('@/views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
   }
 ];
 ```
@@ -149,7 +151,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/user/:id',
     name: 'UserDetails',
-    component: () => import('@/views/UserDetails.vue')
+    component: () => import(/* webpackChunkName: "app" */ '@/views/UserDetails.vue')
   }
 ];
 
@@ -246,7 +248,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/user/:id',
     name: 'UserDetails',
-    component: () => import('@/views/UserDetails.vue')
+    component: () => import(/* webpackChunkName: "app" */ '@/views/UserDetails.vue')
   }
 ];
 ```

@@ -19,93 +19,103 @@ Vue 3와 TypeScript, Composition API를 사용하여 Vuex 스토어를 설정하
 
 ### 3-1. 모듈 생성
 
-`store/modules/counter.ts` 파일을 생성하고 다음 코드를 추가합니다.
-
 ```typescript
-// store/modules/counter.ts
-import { Module, ActionContext } from 'vuex';
-import { State } from '../index';
+// store/modules/login.ts
+import { useNetwork } from '@/shared';
 
-// Counter 모듈의 상태 타입 정의
-export interface CounterState {
-  count: number;
-}
+export default {
+  namespaced: true,
 
-// Counter 모듈 생성
-const counter: Module<CounterState, State> = {
+  // state: 애플리케이션의 중앙 저장소로, 애플리케이션의 모든 컴포넌트가 공유하는 데이터의 상태를 보관
   state: {
-    count: 0,
+    loginToken: '', // 자동 로그인 관련 토큰
   },
+
+  // getters: State의 데이터를 계산하거나 파생하여 컴포넌트에서 쉽게 접근할 수 있게 도와주는 속성
   getters: {
-    doubleCount(state: CounterState): number {
-      return state.count * 2;
-    },
-    count(state: CounterState): number {
-      return state.count;
-    },
-    countPlus: (state: CounterState) => (add: number): number => {
-      return state.count + add;
+    // 로그인 토큰
+    loginToken: (state: any) => {
+      return state.loginToken;
     },
   },
+
+  // mutations: State를 동기적으로 수정하기 위한 메소드들로, 실제 상태를 변화
   mutations: {
-    increment(state: CounterState): void {
-      state.count++;
-    },
-    decrement(state: CounterState): void {
-      state.count--;
-    },
+    setState(state: any, { key, value }: any) {
+      state[key] = value;
+    }
   },
+
+  // actions: 비동기 작업을 처리하거나 여러 Mutations을 조합하여 사용할 수 있으며, 결과적으로 Mutations를 커밋(commit)하여 상태를 변경
   actions: {
-    incrementAsync({ commit }: ActionContext<CounterState, State>): void {
-      setTimeout(() => {
-        commit('increment');
-      }, 1000);
+    // 로그인 요청
+    async postLogin({ commit }: any, payload: {
+      userId: string, // 사용자 아이디
+      password: string, // 사용자 패스워드
+    }) {
+      const { requestLogin } = useNetwork();
+      const { result, header, body }: Res = await requestLogin({
+        isMock: true,
+        trcode: 'DM0001',
+        userId: payload.userId,
+        password: payload.password,
+        body: {
+          userId: payload.userId,
+          passwd: payload.password,
+        }
+      });
+
+      return result ? { header, body } : null;
     },
-    async decrementAsync({ commit }: ActionContext<CounterState, State>): Promise<void> {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      commit('decrement');
+    // 로그인 토큰 저장
+    setLoginToken({ commit }: any, loginToken: string) {
+      commit('setState', { key: 'loginToken', value: loginToken });
     },
   },
 };
-
-export default counter;
 ```
-
-또 다른 모듈을 생성해봅시다. `store/modules/user.ts` 파일을 생성하고 다음 코드를 추가합니다.
 
 ```typescript
 // store/modules/user.ts
-import { Module, ActionContext } from 'vuex';
-import { State } from '../index';
+export default {
+  namespaced: true,
 
-// User 모듈의 상태 타입 정의
-export interface UserState {
-  name: string;
-}
-
-// User 모듈 생성
-const user: Module<UserState, State> = {
   state: {
-    name: '',
+    user: null, // 사용자 정보
   },
+
   getters: {
-    upperCaseName(state: UserState): string {
-      return state.name.toUpperCase();
+    // 사용자 ID
+    userId: (state: any) => {
+      return state.user.userId;
+    },
+    // 사용자 이름
+    userName: (state: any) => {
+      return state.user.userName;
+    },
+    // 사용자 정보 반환
+    user: (state: any) => {
+      return state.user;
+    },
+    // 고유 값으로 본인 여부 확인
+    isSelf: (state: any) => (seq: string) => {
+      return state.user.userSeq === seq;
     },
   },
+
   mutations: {
-    updateState(state: UserState, payload: { key: keyof UserState; value: any }): void {
-      state[payload.key] = payload.value;
-    },
+    setState(state: any, { key, value }: any) {
+      state[key] = value;
+    }
   },
+
   actions: {
-    setName({ commit }: ActionContext<UserState, State>, newName: string): void {
-      commit('updateState', { key: 'name', value: newName });
+    // 유저 정보 저장
+    setUser({ commit }: any, user: Json) {
+      commit('setState', { key: 'user', value: user });
     },
   },
 };
-
-export default user;
 ```
 
 ### 3-2. 스토어 생성
@@ -114,25 +124,26 @@ export default user;
 
 ```typescript
 // store/index.ts
-import { createStore } from 'vuex';
-import counter, { CounterState } from './modules/counter';
-import user, { UserState } from './modules/user';
+import { createStore, createLogger } from 'vuex';
 
-// 루트 상태 타입 정의
-export interface State {
-  counter: CounterState;
-  user: UserState;
-}
+import login from './modules/login';
+import user from './modules/user';
 
 // 스토어 생성
-const store = createStore<State>({
+export default createStore({
   modules: {
-    counter,
+    login,
     user,
   },
+  strict: process.env.NODE_ENV !== 'production',
+  plugins: [
+    ...(
+      process.env.NODE_ENV !== 'production'
+        ? [ createLogger() ]
+        : []
+    ),
+  ]
 });
-
-export default store;
 ```
 
 ### 3-3. 스토어를 애플리케이션에 추가
@@ -143,12 +154,32 @@ export default store;
 // main.ts
 import { createApp } from 'vue';
 import App from './App.vue';
-import store from './store';
+import store from '@/store';
 
 const app = createApp(App);
 
 app.use(store);
 app.mount('#app');
+```
+
+### 3-4. 스토어 사용
+
+```typescript
+// login.vue
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
+// 스토어 접근
+const store = useStore();
+
+// count와 doubleCount를 게터를 통해 계산
+const userName = computed(() => store.getters['user/userName']);
+const isSelf = computed(() => store.getters['user/isSelf']('mcnc'));
+
+// incrementAsync 액션 호출
+const setUser = () => {
+  store.dispatch('user/setUser', { userName: 'mcnc', seq: 'mcnc' });
+};
 ```
 
 ## 4. Vuex 사용 예제

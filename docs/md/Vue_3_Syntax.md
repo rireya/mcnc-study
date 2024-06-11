@@ -202,6 +202,7 @@ import { ref, computed } from 'vue';
 
 const count = ref(0);
 const doubleCount = computed(() => count.value * 2);
+const squaredCount = computed(() => (x: number) => x * x); // 함수식으로 사용
 ```
 
 ### watch

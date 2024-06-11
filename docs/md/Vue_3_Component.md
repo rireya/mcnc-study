@@ -64,6 +64,12 @@ Props는 부모 컴포넌트에서 자식 컴포넌트로 데이터를 전달하
 import { defineEmits } from 'vue';
 
 const emit = defineEmits(['message']);
+const props = defineProps({
+  string: { type: String, default: '' },
+  json: { type: Object as PropType<Json>, default: {} as Json },
+  array: { type: Array as PropType<string[]>, default: [] as string[] },
+});
+
 const sendMessage = () => {
   emit('message', '안녕하세요, 부모님!');
 };
@@ -104,10 +110,17 @@ Provide/Inject는 조상 컴포넌트에서 후손 컴포넌트로 데이터를 
 </template>
 
 <script lang="ts" setup>
-import { provide } from 'vue';
+import { ref, provide } from 'vue';
 import ParentComponent from './ParentComponent.vue';
 
-provide('sharedData', '조상에서 제공된 데이터');
+const test = ref<string>('test');
+
+provide('shared', {
+  test: test,
+  foo: () => {
+    console.log('foo');
+  }
+});
 </script>
 ```
 
@@ -131,14 +144,14 @@ import ChildComponent from './ChildComponent.vue';
 ```vue
 <template>
   <div>
-    <p>자식 컴포넌트입니다. 공유 데이터: {{ sharedData }}</p>
+    <p>자식 컴포넌트입니다. 공유 데이터: {{ sharedData.test }}</p>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { inject } from 'vue';
 
-const sharedData = inject<string>('sharedData');
+const sharedData = inject<any>('shared');
 </script>
 ```
 
@@ -299,12 +312,13 @@ import ChildComponent from './ChildComponent.vue';
 ```vue
 <template>
   <div>
-    <slot :message="message"></slot> <!-- message 변수를 슬롯에 전달 -->
+    <slot :message="message" :foo="foo"></slot> <!-- message 변수를 슬롯에 전달 -->
   </div>
 </template>
 
 <script lang="ts" setup>
-const message = '안녕하세요, 부모님!';
+const foo = 'foo';
+const message = 'bar';
 </script>
 ```
 
@@ -316,8 +330,8 @@ const message = '안녕하세요, 부모님!';
 <template>
   <div>
     <ChildComponent>
-      <template #default="slotProps">
-        <p>{{ slotProps.message }}</p> <!-- 자식 컴포넌트로부터 전달받은 message 사용 -->
+      <template #default="{ foo, message }">
+        <p>{{ foo }} {{ message }}</p> <!-- 자식 컴포넌트로부터 전달받은 message 사용 -->
       </template>
     </ChildComponent>
   </div>
