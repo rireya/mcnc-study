@@ -73,9 +73,9 @@ deploy 명령어로 실행시 NODE_ENV가 production로 설정되기 때문에 �
 - 외부 라이브러리를 사용할 때, ES5 까지만 지원하는 모바일에서 추가 확인 필요 (iOS 13 미만)
   - 기본적으로 ES5 타겟으로 빌드시 빌드가 되지만 ES6만 지원하고 ES5 지원은 없거나 다른 패키지를 import 해야할 수도 있음
 
-## bizMOB Typescript Handler 호출
+## bizMOB Typescript Adapter 호출
 
-javaScript로 구현된 bizMOB 서비스를 Typescript 형식으로 사용할 수 있도록 하는 Handler
+javaScript로 구현된 bizMOB 서비스를 Typescript 형식으로 사용할 수 있도록 하는 Adapter
 
 ```ts
 import File from '@/bizMOB/Xross/File';
@@ -117,59 +117,242 @@ const onBizMOBReqTr = async() => {
 
 ### bizMOB JWT Token 통신
 
-- (작성 예정)
+- JWT Token을 이용한 인증 방식과 연관된 기능
+- 서버에서 Session과 Token 방식 중에서 **Token 방식**을 이용시 사용
+- 일반 전문 호출시 JWT Token과 관련된 에러코드 추가됨
+  - **ERR000**: Access Token 검증 실패. Token 재발행 필요 (renewToken)
+
+```ts
+// JWT Token 초기화
+import Network from '@/bizMOB/Xross/Network';
+import BzToken from '@/bizMOB/Auth/BzToken';
+
+const sample = async () => {
+    // 로그인 로직
+    const res: any = await Network.requestLogin({
+        _bMock: false,
+        _sTrcode: 'DM0001',
+        _sUserId: 'tester1',
+        _sPassword : '1111',
+        _oBody: {
+            userId: 'tester1',
+            passwd: '1111',
+        }
+    });
+
+    if (res.result) {
+        // 사용자 정보 저장
+        userStore.dispatch('set', res.body);
+
+        // 프로젝트 내에 JWT Token 정보 저장
+        authStore.dispatch('set', {
+            accessToken: res.accessToken, // 로그인 인증 Token
+            accessTokenExpTime: res.accessTokenExpTime, // 로그인 인증 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
+            refreshToken: res.refreshToken, // 로그인 갱신 Token
+            refreshTokenExpTime: res.refreshTokenExpTime, // 로그인 갱신 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
+        });
+
+        // bizMOB 설정
+        BzToken.init({
+            accessToken: res.accessToken, // 로그인 인증 Token
+            accessTokenExpTime: res.accessTokenExpTime, // 로그인 인증 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
+            refreshToken: res.refreshToken, // 로그인 갱신 Token
+            refreshTokenExpTime: res.refreshTokenExpTime, // 로그인 갱신 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
+        });
+    }
+};
+```
+
+```ts
+// JWT Token 재발행
+import BzToken from '@/bizMOB/Auth/BzToken';
+
+const sample = async () => {
+    if (BzToken.isTokenExpired()) {
+        const res: any = await BzToken.renewToken();
+
+        // 프로젝트 내에 JWT Token 정보 저장
+        authStore.dispatch('set', {
+            accessToken: res.accessToken, // 로그인 인증 Token
+            accessTokenExpTime: res.accessTokenExpTime, // 로그인 인증 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
+            refreshToken: res.refreshToken, // 로그인 갱신 Token
+            refreshTokenExpTime: res.refreshTokenExpTime, // 로그인 갱신 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
+        });
+    }
+};
+```
 
 ### bizMOB 암호화 통신
 
+- 서버 통신시 Body 데이터 암호화와 연관된 기능
 - Web과 App에서 암호화 통신을 하는 방법에 차이가 있음
-  - **App**: Native에 App 빌드시 암호화 여부를 요청시 Native에서 처리
-  - **Web**: Client에서 암호화 키 발급과 갱신 처리를 추가해야  함
-- Web에서 암호화 통신을 ON 하기 위해서는 .env파일에 있는 `VUE_APP_ENCRYPTION_USE` 변수를 `'true'` 로 변경
-- Web에서 암호화 통신에 사용될 키와 토큰 발급을 위해는 `bizMOB BzCrypto`의 `shareAuthKey` 호출
+  - **App**: `public/bizMOB/app.config`파일의 `ENCRYPTION_USE`를 true로 설정 (운영, 품질, 개발 별도로 존재)
+  - **Web**: `.env.{개발환경}` 파일에 있는 `VUE_APP_ENCRYPTION_USE`를 `'true'` 로 설정 후 **암호화 관련 로직** 추가
+- 일반 전문 호출시 암호화 통신과 관련된 에러코드 추가됨
+  - **EAH000**: 서버의 암호키 세션이 만료. 키 재발급 필요 (shareAuthKey)
+  - **EAH001**: 서버의 암호화 인증 토큰 만료. 토큰 재발행 필요 (renewAuthToken)
 
 ```ts
-// 키 발급
+// 키 초기화
 import BzCrypto from '@/bizMOB/Auth/BzCrypto';
 
-const shareAuthKey = async () => {
+const sample = async () => {
+    // Store 등을 통해서 관리되고 있는 암호화 관련 정보
+    const cryptoStore = { ... }
+
+    // 암호화 통신 변수 초기화
+    if (!BzCrypto.isInit()) {
+        /**
+         * 초기 값 설정
+         * 초기 값은 프로젝트 내의 로직으로 저장 관리 필요.
+         * Store 등을 통해서 관리하는 경우 초기에 null이 아닌 Store의 값을 설정.
+         */
+        BzCrypto.init({
+            crySymKey: cryptoStore.crySymKey,
+            cryAuthToken: cryptoStore.cryAuthToken,
+            cryAuthTokenExpTime: cryptoStore.cryAuthTokenExpTime,
+            cryRefreshToken: cryptoStore.cryRefreshToken,
+            cryRefreshTokenExpTime: cryptoStore.cryRefreshTokenExpTime,
+        })
+    }
+};
+```
+
+```ts
+// 신규 키 & 인증 토큰 발급
+import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+
+const sample = async () => {
     // 토큰 발급 여부 확인
-    if (!BzCrypto.isToken()) {
+    if (BzCrypto.isTokenRequired()) {
         try {
-            // 필요한 경우 Client Loading Progress 추가
-            await BzCrypto.shareAuthKey({
-                _bProgressEnable: false, // Native App Progress 사용 여부
-            });
+            /**
+             * shareAuthKey 호출시 내부 변수 값 설정까지 같이 진행
+             */
+            const crypto = await BzCrypto.shareAuthKey();
+
+            /**
+             * 암호화 정보를 관리하는 Store 등에 저장
+             */
+            cryptoStore = {
+                crySymKey: crypto.crySymKey,
+                cryAuthToken: crypto.cryAuthToken,
+                cryAuthTokenExpTime: crypto.cryAuthTokenExpTime,
+                cryRefreshToken: crypto.cryRefreshToken,
+                cryRefreshTokenExpTime: crypto.cryRefreshTokenExpTime,
+            };
+        } catch (error) {
+            /**
+             * Project 환경에 맞춰서 Error Message 처리
+             *
+             * 키 공유 전문(BM4001)
+             *     BM4001IMPL0001
+             *         서버에서 암호화 키 생성 과정에서 오류 발생(요청 cryPbKey 값이 잘못 되었거나, 서버 오류)
+             *         서버 로그 확인 필요
+             */
+        }
+    }
+
+    console.log(BzCrypto.getCryAuthToken()) // 인증 토큰
+};
+```
+
+```ts
+// 인증 토큰 재발행
+import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+
+const sample = async () => {
+    // 토큰 만료 여부 확인
+    if (BzCrypto.isTokenExpired()) {
+        try {
+            /**
+             * BzCrypto 내에 저장되어 있는 변수 값을 기준으로 재발행 요청
+             */
+            const crypto = await BzCrypto.renewAuthToken();
+
+            /**
+             * 암호화 정보를 관리하는 Store 등에 저장
+             */
+            cryptoStore = {
+                crySymKey: crypto.crySymKey,
+                cryAuthToken: crypto.cryAuthToken,
+                cryAuthTokenExpTime: crypto.cryAuthTokenExpTime,
+                cryRefreshToken: crypto.cryRefreshToken,
+                cryRefreshTokenExpTime: crypto.cryRefreshTokenExpTime,
+            };
+        } catch (error) {
+            /**
+             * Project 환경에 맞춰서 Error Message 처리
+             *
+             * 토큰 갱신 전문(BM4002)
+             *     BM4002TKER1001
+             *         유효하지 않은 토큰 (bizMOB Server에서 생성된 토큰이 아닐 경우, 일반적인 상황에서는 발생 안됨)
+             *     BM4002TKER1002
+             *         Refresh token 이 만료 되었을 경우 발생
+             *         키공유전문(BM4001) 다시 호출하여 신규 암호화키, 토큰 발행
+             */
+        }
+    }
+
+    console.log(BzCrypto.getCryAuthToken()) // 인증 토큰
+};
+```
+
+```ts
+// 전체 과정 Sample
+import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+
+const processSample = async () => {
+    // Store 등을 통해서 관리되고 있는 암호화 관련 정보
+    const cryptoStore = { ... }
+
+    // 암호화 통신 변수 초기화
+    if (!BzCrypto.isInit()) {
+        BzCrypto.init({
+            crySymKey: cryptoStore.crySymKey,
+            cryAuthToken: cryptoStore.cryAuthToken,
+            cryAuthTokenExpTime: cryptoStore.cryAuthTokenExpTime,
+            cryRefreshToken: cryptoStore.cryRefreshToken,
+            cryRefreshTokenExpTime: cryptoStore.cryRefreshTokenExpTime,
+        })
+    }
+
+    // 토큰 발급 여부 확인
+    if (BzCrypto.isTokenRequired()) {
+        try {
+            const crypto = await BzCrypto.shareAuthKey();
+
+            // 암호화 정보 저장 (store로 관리 추천)
+            cryptoStore = {
+                crySymKey: crypto.crySymKey,
+                cryAuthToken: crypto.cryAuthToken,
+                cryAuthTokenExpTime: crypto.cryAuthTokenExpTime,
+                cryRefreshToken: crypto.cryRefreshToken,
+                cryRefreshTokenExpTime: crypto.cryRefreshTokenExpTime,
+            };
+        } catch (error) {
+            // Project 환경에 맞춰서 Error Message 처리
+        }
+    }
+    // 토큰 만료 여부 확인
+    else if (BzCrypto.isTokenExpired()) {
+        try {
+            const crypto = await BzCrypto.renewAuthToken();
+
+            // 암호화 정보 저장 (store로 관리 추천)
+            cryptoStore = {
+                crySymKey: crypto.crySymKey,
+                cryAuthToken: crypto.cryAuthToken,
+                cryAuthTokenExpTime: crypto.cryAuthTokenExpTime,
+                cryRefreshToken: crypto.cryRefreshToken,
+                cryRefreshTokenExpTime: crypto.cryRefreshTokenExpTime,
+            };
         } catch (error) {
             // Project 환경에 맞춰서 Error Message 처리
         }
     }
 };
 ```
-
-- Web에서 통신 중에 토큰이 만료된 경우 토큰 갱신 후에 재요청 필요
-
-```ts
-// 키 갱신
-import BzCrypto from '@/bizMOB/Auth/BzCrypto';
-
-const renewAuthToken = async () => {
-    // 토큰 만료 여부 확인
-    if (BzCrypto.isExpiredToken()) {
-        try {
-            // 필요한 경우 Client Loading Progress 추가
-            await BzCrypto.renewAuthToken({
-                _bProgressEnable: false, // Native App Progress 사용 여부
-            });
-        } catch (error) {
-            // TODO Project 환경에 맞춰서 Error Message 처리
-        }
-    }
-};
-```
-
-- 일반 전문 호출시 세션과 관련된 에러코드 추가됨
-  - **`EAH000`**: 서버의 세션이 만료. 키 재발급 필요 (shareAuthKey)
-  - **`EAH001`**: 암호화 인증 토큰 만료. 토큰 갱신 필요 (renewAuthToken)
 
 ### bizMOB Native i18n 값 셋팅
 
