@@ -1,6 +1,6 @@
 # Projects
 
-## bizMOB4 Base Project (Update. 24-06-12)
+## bizMOB4-Base Project (Last Update. 24-06-17)
 
 Vue3를 기반으로 제작된 bizMOB Base 프로젝트
 
@@ -16,11 +16,23 @@ Vue3를 기반으로 제작된 bizMOB Base 프로젝트
 - sass
 - typescript
 
-## bizMOB4-SI Project (Update. 24-06-12)
+### 24-06-17. bizMOB4-Base 변경 사항
+
+- JWT Token 관련 기능 추가
+- 암호화 통신 기능 개선 (bizMOB4 Base Project 탭 확인)
+- 화면 추적을 위한 Tracking 서비스 추가
+
+## bizMOB4-SI Project (Last Update. 24-06-17)
 
 Base를 기반으로 기본적인 공통 함수 및 샘플 화면이 추가된 프로젝트
 
 [Download](https://rireya.github.io/mcnc-study/file/bizMOB4Vue-SI.zip)
+
+### 24-06-17. bizMOB4-SI 변경 사항
+
+- JWT Token 관련 기능 추가
+- 암호화 통신 기능 개선 (bizMOB4 Base Project 탭 확인)
+- 화면 추적을 위한 Tracking 서비스 및 예제 추가
 
 ## bizMOB4 Base Publishing Project (Update. 24-06-10)
 
