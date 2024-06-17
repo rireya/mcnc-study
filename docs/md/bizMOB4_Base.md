@@ -447,6 +447,30 @@ const onGlobalDataService = () => {
 };
 ```
 
+### TrackingService
+
+- 화면 이동 추적시 사용할 서비스
+- 기본 골격만 생성해둔 상태로 requestTr을 호출하는 형식으로 함수 개발
+- 추후 필요한 기능을 `mhchoi@mcnc.co.kr`로 요청시 추가 개선 예정
+
+```ts
+// README.vue
+import { TrackingService } from '@/bizMOB/Service';
+
+router.afterEach((to, from) => {
+    // bizMOB Backbutton Default Event Setup
+    Device.isApp() && Event.setEvent('backbutton', () => router.back());
+
+    // 화면 추적 전문 호출 서비스
+    TrackingService.track({
+        _sTrcode: 'DM9999',
+        _oBody: {
+            _sUrl: to.path,
+        },
+    });
+});
+```
+
 ### 클래스별 지원 함수
 
 ```plaintext
