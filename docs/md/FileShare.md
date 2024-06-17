@@ -1,6 +1,6 @@
 # Projects
 
-## bizMOB4-Base Project (Last Update. 24-06-17)
+## bizMOB4-Base Project (Last. 24-06-17)
 
 Vue3를 기반으로 제작된 bizMOB Base 프로젝트
 
@@ -22,7 +22,7 @@ Vue3를 기반으로 제작된 bizMOB Base 프로젝트
 - 암호화 통신 기능 개선 (bizMOB4 Base Project 탭 확인)
 - 화면 추적을 위한 Tracking 서비스 추가
 
-## bizMOB4-SI Project (Last Update. 24-06-17)
+## bizMOB4-SI Project (Last. 24-06-17)
 
 Base를 기반으로 기본적인 공통 함수 및 샘플 화면이 추가된 프로젝트
 
@@ -34,7 +34,7 @@ Base를 기반으로 기본적인 공통 함수 및 샘플 화면이 추가된 �
 - 암호화 통신 기능 개선 (bizMOB4 Base Project 탭 확인)
 - 화면 추적을 위한 Tracking 서비스 및 예제 추가
 
-## bizMOB4 Base Publishing Project (Last Update. 24-06-10)
+## bizMOB4 Base Publishing Project (Last. 24-06-10)
 
 bizMOB4에 맞춘 퍼블리싱 Base 프로젝트
 
