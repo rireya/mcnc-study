@@ -73,7 +73,7 @@ deploy 명령어로 실행시 NODE_ENV가 production로 설정되기 때문에 �
 - 외부 라이브러리를 사용할 때, ES5 까지만 지원하는 모바일에서 추가 확인 필요 (iOS 13 미만)
   - 기본적으로 ES5 타겟으로 빌드시 빌드가 되지만 ES6만 지원하고 ES5 지원은 없거나 다른 패키지를 import 해야할 수도 있음
 
-## bizMOB Typescript Adapter 호출
+## bizMOB Typescript Adapter
 
 javaScript로 구현된 bizMOB 서비스를 Typescript 형식으로 사용할 수 있도록 하는 Adapter
 
