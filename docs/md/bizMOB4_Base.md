@@ -142,10 +142,10 @@ const sample = async () => {
 
     if (res.result) {
         // 사용자 정보 저장
-        userStore.dispatch('set', res.body);
+        userStore.dispatch('setUser', res.body);
 
         // 프로젝트 내에 JWT Token 정보 저장
-        authStore.dispatch('set', {
+        authStore.dispatch('setTokenInfo', {
             accessToken: res.accessToken, // 로그인 인증 Token
             accessTokenExpTime: res.accessTokenExpTime, // 로그인 인증 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
             refreshToken: res.refreshToken, // 로그인 갱신 Token
@@ -172,13 +172,25 @@ const sample = async () => {
         const res: any = await BzToken.renewToken();
 
         // 프로젝트 내에 JWT Token 정보 저장
-        authStore.dispatch('set', {
+        authStore.dispatch('setTokenInfo', {
             accessToken: res.accessToken, // 로그인 인증 Token
             accessTokenExpTime: res.accessTokenExpTime, // 로그인 인증 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
             refreshToken: res.refreshToken, // 로그인 갱신 Token
             refreshTokenExpTime: res.refreshTokenExpTime, // 로그인 갱신 Token 만료 시간 (yyyy-MM-dd HH:mm:ss)
         });
     }
+};
+```
+
+```ts
+// 저장된 값 조회 함수
+import BzToken from '@/bizMOB/Auth/BzToken';
+
+const sample = () => {
+    console.log(BzToken.getAccessToken()); // 인증 토큰 조회
+    console.log(BzToken.getAccessTokenExpTime()); // 인증 토큰 만료 시간 조회 (yyyy-MM-dd HH:mm:ss)
+    console.log(BzToken.getRefreshToken()); // 갱신 토큰 조회
+    console.log(BzToken.getRefreshTokenExpTime()); // 갱신 토큰 만료 시간 조회 (yyyy-MM-dd HH:mm:ss)
 };
 ```
 
@@ -198,7 +210,7 @@ import BzCrypto from '@/bizMOB/Auth/BzCrypto';
 
 const sample = async () => {
     // Store 등을 통해서 관리되고 있는 암호화 관련 정보
-    const cryptoStore = { ... }
+    const cryptoInfo = authStore.getter('cryptoInfo');
 
     // 암호화 통신 변수 초기화
     if (!BzCrypto.isInit()) {
@@ -208,11 +220,11 @@ const sample = async () => {
          * Store 등을 통해서 관리하는 경우 초기에 null이 아닌 Store의 값을 설정.
          */
         BzCrypto.init({
-            crySymKey: cryptoStore.crySymKey,
-            cryAuthToken: cryptoStore.cryAuthToken,
-            cryAuthTokenExpTime: cryptoStore.cryAuthTokenExpTime,
-            cryRefreshToken: cryptoStore.cryRefreshToken,
-            cryRefreshTokenExpTime: cryptoStore.cryRefreshTokenExpTime,
+            crySymKey: cryptoInfo.crySymKey,
+            cryAuthToken: cryptoInfo.cryAuthToken,
+            cryAuthTokenExpTime: cryptoInfo.cryAuthTokenExpTime,
+            cryRefreshToken: cryptoInfo.cryRefreshToken,
+            cryRefreshTokenExpTime: cryptoInfo.cryRefreshTokenExpTime,
         })
     }
 };
@@ -234,13 +246,13 @@ const sample = async () => {
             /**
              * 암호화 정보를 관리하는 Store 등에 저장
              */
-            cryptoStore = {
+            authStore.dispatch('setCryptoInfo', {
                 crySymKey: crypto.crySymKey,
                 cryAuthToken: crypto.cryAuthToken,
                 cryAuthTokenExpTime: crypto.cryAuthTokenExpTime,
                 cryRefreshToken: crypto.cryRefreshToken,
                 cryRefreshTokenExpTime: crypto.cryRefreshTokenExpTime,
-            };
+            });
         } catch (error) {
             /**
              * Project 환경에 맞춰서 Error Message 처리
@@ -273,13 +285,13 @@ const sample = async () => {
             /**
              * 암호화 정보를 관리하는 Store 등에 저장
              */
-            cryptoStore = {
+            authStore.dispatch('setCryptoInfo', {
                 crySymKey: crypto.crySymKey,
                 cryAuthToken: crypto.cryAuthToken,
                 cryAuthTokenExpTime: crypto.cryAuthTokenExpTime,
                 cryRefreshToken: crypto.cryRefreshToken,
                 cryRefreshTokenExpTime: crypto.cryRefreshTokenExpTime,
-            };
+            });
         } catch (error) {
             /**
              * Project 환경에 맞춰서 Error Message 처리
@@ -299,37 +311,51 @@ const sample = async () => {
 ```
 
 ```ts
+// 저장된 값 조회 함수
+import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+
+const sample = () => {
+    console.log(BzCrypto.getSymKey()); // 암호화 키 조회
+    console.log(BzCrypto.getCryAuthToken()); // 인증 토큰 조회
+    console.log(BzCrypto.getCryAuthTokenExpTime()); // 인증 토큰 만료 시간 조회 (yyyy-MM-dd HH:mm:ss)
+    console.log(BzCrypto.getCryRefreshToken()); // 갱신 토큰 조회
+    console.log(BzCrypto.getCryRefreshTokenExpTime()); // 갱신 토큰 만료 시간 조회 (yyyy-MM-dd HH:mm:ss)
+};
+```
+
+```ts
 // 전체 과정 Sample
 import BzCrypto from '@/bizMOB/Auth/BzCrypto';
 
 const processSample = async () => {
     // Store 등을 통해서 관리되고 있는 암호화 관련 정보
-    const cryptoStore = { ... }
+    const cryptoInfo = authStore.getter('cryptoInfo');
 
     // 암호화 통신 변수 초기화
     if (!BzCrypto.isInit()) {
         BzCrypto.init({
-            crySymKey: cryptoStore.crySymKey,
-            cryAuthToken: cryptoStore.cryAuthToken,
-            cryAuthTokenExpTime: cryptoStore.cryAuthTokenExpTime,
-            cryRefreshToken: cryptoStore.cryRefreshToken,
-            cryRefreshTokenExpTime: cryptoStore.cryRefreshTokenExpTime,
+            crySymKey: cryptoInfo.crySymKey,
+            cryAuthToken: cryptoInfo.cryAuthToken,
+            cryAuthTokenExpTime: cryptoInfo.cryAuthTokenExpTime,
+            cryRefreshToken: cryptoInfo.cryRefreshToken,
+            cryRefreshTokenExpTime: cryptoInfo.cryRefreshTokenExpTime,
         })
     }
 
     // 토큰 발급 여부 확인
     if (BzCrypto.isTokenRequired()) {
         try {
+            // 암호화 키 & 인증 토큰 신규발행
             const crypto = await BzCrypto.shareAuthKey();
 
-            // 암호화 정보 저장 (store로 관리 추천)
-            cryptoStore = {
+            // 암호화 정보 저장
+            authStore.dispatch('setCryptoInfo', {
                 crySymKey: crypto.crySymKey,
                 cryAuthToken: crypto.cryAuthToken,
                 cryAuthTokenExpTime: crypto.cryAuthTokenExpTime,
                 cryRefreshToken: crypto.cryRefreshToken,
                 cryRefreshTokenExpTime: crypto.cryRefreshTokenExpTime,
-            };
+            });
         } catch (error) {
             // Project 환경에 맞춰서 Error Message 처리
         }
@@ -337,16 +363,17 @@ const processSample = async () => {
     // 토큰 만료 여부 확인
     else if (BzCrypto.isTokenExpired()) {
         try {
+            // 인증 토큰 재발행
             const crypto = await BzCrypto.renewAuthToken();
 
-            // 암호화 정보 저장 (store로 관리 추천)
-            cryptoStore = {
+            // 암호화 정보 저장
+            authStore.dispatch('setCryptoInfo', {
                 crySymKey: crypto.crySymKey,
                 cryAuthToken: crypto.cryAuthToken,
                 cryAuthTokenExpTime: crypto.cryAuthTokenExpTime,
                 cryRefreshToken: crypto.cryRefreshToken,
                 cryRefreshTokenExpTime: crypto.cryRefreshTokenExpTime,
-            };
+            });
         } catch (error) {
             // Project 환경에 맞춰서 Error Message 처리
         }
