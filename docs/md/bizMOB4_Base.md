@@ -73,7 +73,7 @@ deploy 명령어로 실행시 NODE_ENV가 production로 설정되기 때문에 �
 - 외부 라이브러리를 사용할 때, ES5 까지만 지원하는 모바일에서 추가 확인 필요 (iOS 13 미만)
   - 기본적으로 ES5 타겟으로 빌드시 빌드가 되지만 ES6만 지원하고 ES5 지원은 없거나 다른 패키지를 import 해야할 수도 있음
 
-## bizMOB Typescript Adapter
+## bizMOB Typescript Class
 
 javaScript로 구현된 bizMOB 서비스를 Typescript 형식으로 사용할 수 있도록 하는 Adapter
 
@@ -129,7 +129,7 @@ const onBizMOBReqTr = async() => {
 ```ts
 // JWT Token 초기화
 import Network from '@/bizMOB/Xross/Network';
-import BzToken from '@/bizMOB/Auth/BzToken';
+import BzToken from '@/bizMOB/BzClass/BzToken';
 
 const sample = async () => {
     // 로그인 로직
@@ -169,7 +169,7 @@ const sample = async () => {
 
 ```ts
 // JWT Token 재발행
-import BzToken from '@/bizMOB/Auth/BzToken';
+import BzToken from '@/bizMOB/BzClass/BzToken';
 
 const sample = async () => {
     if (BzToken.isTokenExpired()) {
@@ -188,7 +188,7 @@ const sample = async () => {
 
 ```ts
 // 저장된 값 조회 함수
-import BzToken from '@/bizMOB/Auth/BzToken';
+import BzToken from '@/bizMOB/BzClass/BzToken';
 
 const sample = () => {
     console.log(BzToken.getAccessToken()); // 인증 토큰 조회
@@ -214,7 +214,7 @@ const sample = () => {
 
 ```ts
 // 키 초기화
-import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+import BzCrypto from '@/bizMOB/BzClass/BzCrypto';
 
 const sample = async () => {
     // Store 등을 통해서 관리되고 있는 암호화 관련 정보
@@ -240,7 +240,7 @@ const sample = async () => {
 
 ```ts
 // 신규 키 & 인증 토큰 발급
-import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+import BzCrypto from '@/bizMOB/BzClass/BzCrypto';
 
 const sample = async () => {
     // 토큰 발급 여부 확인
@@ -279,7 +279,7 @@ const sample = async () => {
 
 ```ts
 // 인증 토큰 재발행
-import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+import BzCrypto from '@/bizMOB/BzClass/BzCrypto';
 
 const sample = async () => {
     // 토큰 만료 여부 확인
@@ -320,7 +320,7 @@ const sample = async () => {
 
 ```ts
 // 저장된 값 조회 함수
-import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+import BzCrypto from '@/bizMOB/BzClass/BzCrypto';
 
 const sample = () => {
     console.log(BzCrypto.getSymKey()); // 암호화 키 조회
@@ -333,7 +333,7 @@ const sample = () => {
 
 ```ts
 // 전체 과정 Sample
-import BzCrypto from '@/bizMOB/Auth/BzCrypto';
+import BzCrypto from '@/bizMOB/BzClass/BzCrypto';
 
 const processSample = async () => {
     // Store 등을 통해서 관리되고 있는 암호화 관련 정보
@@ -391,16 +391,14 @@ const processSample = async () => {
 
 ### bizMOB Native i18n 값 셋팅
 
-- 다국어 처리를 해야 하는 경우 bizMOB의 `LocaleService`를 통해서 Native의 다국어 코드를 수정할 수 있음
-- 초기화를 해야 할 경우 `LocaleService`의 `initLocale` 호출
+- 다국어 처리를 해야 하는 경우 bizMOB의 `BzLocale`를 통해서 Native의 다국어 코드를 수정할 수 있음
+- 초기화를 해야 할 경우 `BzLocale`의 `initLocale` 호출
 
 ```ts
 // App.vue
 import { onMounted } from 'vue';
-import { LocaleService } from '@/bizMOB/Service';
+import BzLocale from '@/bizMOB/BzClass/BzLocale';
 import Event from '@/bizMOB/Xross/Event';
-
-const localeService = new LocaleService();
 
 onMounted(async () => {
     Event.setEvent('ready', init);
@@ -408,67 +406,22 @@ onMounted(async () => {
 
 // App, Web initialization code here
 const init = () => {
-    localeService.initLocale(); // 언어 초기화
+    BzLocale.initLocale(); // 언어 초기화
 };
 ```
 
-- 언어를 변경해야 할 경우 `LocaleService`의 `changeLocale` 호출
+- 언어를 변경해야 할 경우 `BzLocale`의 `changeLocale` 호출
 
 ```ts
 // README.vue
-import { LocaleService } from '@/bizMOB/Service';
+import BzLocale from '@/bizMOB/BzClass/BzLocale';
 
-const localeService = new LocaleService();
-
-const onLocaleService = async() => {
+const onLocale = async() => {
     // 언어 코드에 따른 full code 프리셋은 public/bizMOB/bizMOB-locale.js에 작성되어 있음
-    localeService.changeLocale('ko-KR'); // 또는 'ko' (프리셋에 등록되어 있어야 함.)
+    BzLocale.changeLocale('ko-KR'); // 또는 'ko' (프리셋에 등록되어 있어야 함.)
 
-    console.log(await localeService.getLocale()); // {result: true, locale: 'ko-KR'}
+    console.log(await BzLocale.getLocale()); // {result: true, locale: 'ko-KR'}
 };
-```
-
-### GlobalShared Data
-
-- bizMOB 내부에 구현된 Vuex를 이용한 상태관리 공용 모듈
-- Vuex 또는 Pinia를 따로 셋팅해서 사용하고 싶지 않다면 해당 서비스 이용
-- 해당 변수는 sessionStorage나 localStorage에 저장되지 않기 때문에 Storage 저장이 필요한 경우 추가 작업 필요
-
-```ts
-// README.vue
-import { GlobalDataService } from '@/bizMOB/Service';
-
-const globalDataService = GlobalDataService();
-
-const onGlobalDataService = () => {
-    globalDataService.setGlobalDataByKey('foo', 'bar'); // 저장 (sessionStorage)
-
-    console.log(globalDataService.getGlobalDataByKey('foo')); // bar
-};
-```
-
-### TrackingService
-
-- 화면 이동 추적시 사용할 서비스
-- 기본 골격만 생성해둔 상태로 requestTr을 호출하는 형식으로 함수 개발
-- 추후 필요한 기능을 `mhchoi@mcnc.co.kr`로 요청시 추가 개선 예정
-
-```ts
-// README.vue
-import { TrackingService } from '@/bizMOB/Service';
-
-router.afterEach((to, from) => {
-    // bizMOB Backbutton Default Event Setup
-    Device.isApp() && Event.setEvent('backbutton', () => router.back());
-
-    // 화면 추적 전문 호출 서비스
-    TrackingService.track({
-        _sTrcode: 'DM9999',
-        _oBody: {
-            _sUrl: to.path,
-        },
-    });
-});
 ```
 
 ### 클래스별 지원 함수
@@ -483,6 +436,10 @@ src/
         │     getTimeout
         │     setTimeout
         │     hideSplash
+        │
+        ├─ Config.ts
+        │     get
+        │     set
         │
         ├─ Contacts.ts
         │     get
