@@ -49,6 +49,10 @@ Base를 기반으로 기본적인 공통 함수 및 샘플 화면이 추가된 �
 
 [Download](https://rireya.github.io/mcnc-study/file/bizMOB4Vue-SI.zip)
 
+### 24-06-25. bizMOB4-SI 변경 사항
+
+- Nested Routes 예시 추가 (views/MAIN)
+
 ### 24-06-24. bizMOB4-SI 변경 사항
 
 - bizMOB 프레임워크 최신화
