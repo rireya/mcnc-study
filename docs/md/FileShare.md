@@ -80,7 +80,7 @@ bizMOB4에 맞춘 퍼블리싱 Base 프로젝트
 
 [Download](https://rireya.github.io/mcnc-study/file/bizMOB4Vue-Publishing.zip)
 
-## bizMOB3.5 Sample Project (New. 24-08-16)
+## bizMOB3.5 Base Project (New. 24-08-16)
 
 이클립스 IDE + jQuery를 기반으로 제작된 bizMOB3.5 Base 프로젝트
 
