@@ -4,7 +4,7 @@
 
 Vue3를 기반으로 제작된 bizMOB Base 프로젝트
 
-[Download](https://rireya.github.io/mcnc-study/file/bizMOB4Vue-Base.zip)
+[Download](https://rireya.github.io/mcnc-study/file/bizMOB4Vue.zip)
 
 - vue3
 - vue/cli-service
@@ -80,8 +80,14 @@ bizMOB4에 맞춘 퍼블리싱 Base 프로젝트
 
 [Download](https://rireya.github.io/mcnc-study/file/bizMOB4Vue-Publishing.zip)
 
-## bizMOB3.5 Base Project (New. 24-06-17)
+## bizMOB3.5 Sample Project (New. 24-08-16)
 
 이클립스 IDE + jQuery를 기반으로 제작된 bizMOB3.5 Base 프로젝트
 
-[Download](https://rireya.github.io/mcnc-study/file/bizMOB3.5jQuery-Base.zip)
+[Download](https://rireya.github.io/mcnc-study/file/bizMOB3jQuery.zip)
+
+## bizMOB3.5 Sample Project (New. 24-08-16)
+
+기본적인 공통 함수 구조가 작성된 bizMOB3.5 Sample 프로젝트
+
+[Download](https://rireya.github.io/mcnc-study/file/bizMOB3jQuery-Sample.zip)
