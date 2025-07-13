@@ -499,6 +499,119 @@ function saveToStorage(key, value) {
 }
 ```
 
+### 🔧 폴리필(Polyfill) 활용
+
+#### 핵심 개념
+
+> **폴리필**: 구버전 브라우저에서 지원하지 않는 최신 기능을 구현해주는 코드
+
+```javascript
+// ✅ Array.prototype.includes 폴리필 (IE 지원)
+if (!Array.prototype.includes) {
+  Array.prototype.includes = function(searchElement, fromIndex) {
+    'use strict';
+    var O = Object(this);
+    var len = parseInt(O.length) || 0;
+    if (len === 0) return false;
+    var n = parseInt(fromIndex) || 0;
+    var k;
+    if (n >= 0) {
+      k = n;
+    } else {
+      k = len + n;
+      if (k < 0) k = 0;
+    }
+    for (; k < len; k++) {
+      if (O[k] === searchElement) return true;
+    }
+    return false;
+  };
+}
+
+// 사용 예시
+var fruits = ['apple', 'banana', 'orange'];
+if (fruits.includes('apple')) {
+  console.log('사과가 있습니다!');
+}
+```
+
+#### 자주 사용하는 폴리필
+
+```javascript
+// ✅ Promise 폴리필 (IE 지원)
+// CDN으로 추가: <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+
+// ✅ fetch API 폴리필 (IE 지원)
+// CDN으로 추가: <script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js"></script>
+
+// ✅ Object.assign 폴리필
+if (typeof Object.assign !== 'function') {
+  Object.assign = function(target) {
+    'use strict';
+    if (target == null) {
+      throw new TypeError('Cannot convert undefined or null to object');
+    }
+    var to = Object(target);
+    for (var index = 1; index < arguments.length; index++) {
+      var nextSource = arguments[index];
+      if (nextSource != null) {
+        for (var nextKey in nextSource) {
+          if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+            to[nextKey] = nextSource[nextKey];
+          }
+        }
+      }
+    }
+    return to;
+  };
+}
+```
+
+#### 폴리필 라이브러리 활용
+
+```html
+<!-- ✅ core-js 폴리필 (권장) -->
+<script src="https://cdn.jsdelivr.net/npm/core-js-bundle@3.32.0/minified.js"></script>
+
+<!-- ✅ 또는 polyfill.io 서비스 -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+<!-- ✅ 특정 기능만 선택적 로드 -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.includes,Promise,fetch"></script>
+```
+
+#### 실무 적용 예시
+
+```javascript
+// ✅ 모던 기능을 폴리필과 함께 안전하게 사용
+document.addEventListener('DOMContentLoaded', function() {
+  // Promise 사용 (폴리필로 IE 지원)
+  fetch('/api/users')
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(users) {
+      // Array.includes 사용 (폴리필로 IE 지원)
+      var activeUsers = users.filter(function(user) {
+        return ['active', 'premium'].includes(user.status);
+      });
+      
+      // Object.assign 사용 (폴리필로 IE 지원)
+      var processedUsers = activeUsers.map(function(user) {
+        return Object.assign({}, user, {
+          displayName: user.name || '이름 없음',
+          isVip: user.status === 'premium'
+        });
+      });
+      
+      displayUsers(processedUsers);
+    })
+    .catch(function(error) {
+      console.error('사용자 데이터 로드 실패:', error);
+    });
+});
+```
+
 ---
 
 ## 🛠️ jQuery 기초 (유지보수용)
@@ -567,21 +680,24 @@ document.getElementById('myButton').addEventListener('click', function() {
 ## ✅ 실무 체크리스트
 
 ### 📋 코드 작성 전
-- [ ] 요구사항을 정확히 이해했는가?
-- [ ] 기존 코드 스타일을 확인했는가?
-- [ ] 브라우저 지원 범위를 확인했는가?
+
+- 요구사항을 정확히 이해했는가?
+- 기존 코드 스타일을 확인했는가?
+- 브라우저 지원 범위를 확인했는가?
 
 ### 📋 코드 작성 중
-- [ ] 함수가 너무 길지 않은가? (20줄 이내 권장)
-- [ ] 중첩이 3단계를 넘지 않는가?
-- [ ] 변수명이 의미를 명확히 전달하는가?
-- [ ] 에러 처리를 했는가?
+
+- 함수가 너무 길지 않은가? (20줄 이내 권장)
+- 중첩이 3단계를 넘지 않는가?
+- 변수명이 의미를 명확히 전달하는가?
+- 에러 처리를 했는가?
 
 ### 📋 코드 작성 후
-- [ ] 다양한 입력값으로 테스트했는가?
-- [ ] 에러 상황을 테스트했는가?
-- [ ] 브라우저 호환성을 확인했는가?
-- [ ] 주석이 필요한 부분에 작성했는가?
+
+- 다양한 입력값으로 테스트했는가?
+- 에러 상황을 테스트했는가?
+- 브라우저 호환성을 확인했는가?
+- 주석이 필요한 부분에 작성했는가?
 
 ---
 

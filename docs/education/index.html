@@ -1,73 +1,73 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCNC 교육 시스템</title>
-    <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="education-styles.css">
-    <link rel="icon" href="../favicon.ico" type="image/x-icon">
-    <!-- Highlight.js VS Code styles -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/vs.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCNC 교육 시스템</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="education-styles.css">
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+  <!-- Highlight.js VS Code styles -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/vs.min.css">
 </head>
 <body>
-    <div class="sidebar">
-        <h1 id="education-title" style="cursor: pointer;" title="클릭하여 교육 시스템 새로고침">🎓 FE 교육</h1>
-        
-        <!-- 교육 과정 선택 -->
-        <div class="sidebar-section">
-            <h2>교육 과정 선택</h2>
-            <div class="control-group">
-                <label for="course-select">과정:</label>
-                <select id="course-select">
-                    <option value="">교육 과정 선택</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label for="day-select">자료:</label>
-                <select id="day-select" disabled>
-                    <option value="">자료 선택</option>
-                </select>
-            </div>
-        </div>
-        
-        <hr class="sidebar-divider">
-        
-        <div class="sidebar-section">
-            <h2>교육 과정</h2>
-            <ul id="course-list">
-                <!-- 동적으로 생성됩니다 -->
-            </ul>
-        </div>
+  <div class="sidebar">
+    <h1 id="education-title" style="cursor: pointer;" title="클릭하여 교육 시스템 새로고침">🎓 FE 교육</h1>
+    
+    <!-- 교육 과정 선택 -->
+    <div class="sidebar-section">
+      <h2>교육 과정 선택</h2>
+      <div class="control-group">
+        <label for="course-select">과정:</label>
+        <select id="course-select">
+          <option value="">교육 과정 선택</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="day-select">자료:</label>
+        <select id="day-select" disabled>
+          <option value="">자료 선택</option>
+        </select>
+      </div>
     </div>
     
-    <div class="content">
-        <div id="md-viewer">
-            <div class="content-area">
-                <div class="empty-state" id="empty-state">
-                    <h3>📚 교육 자료를 선택하세요</h3>
-                    <p>좌측에서 교육 과정과 자료를 선택하면<br>해당 교육 자료가 여기에 표시됩니다.</p>
-                </div>
-                <div class="education-content" id="education-content" style="display: none;">
-                    <!-- 마크다운 내용이 여기에 표시됩니다 -->
-                </div>
-            </div>
+    <hr class="sidebar-divider">
+    
+    <div class="sidebar-section">
+      <h2>교육 과정</h2>
+      <ul id="course-list">
+        <!-- 동적으로 생성됩니다 -->
+      </ul>
+    </div>
+  </div>
+  
+  <div class="content">
+    <div id="md-viewer">
+      <div class="content-area">
+        <div class="empty-state" id="empty-state">
+          <h3>📚 교육 자료를 선택하세요</h3>
+          <p>좌측에서 교육 과정과 자료를 선택하면<br>해당 교육 자료가 여기에 표시됩니다.</p>
         </div>
+        <div class="education-content" id="education-content" style="display: none;">
+          <!-- 마크다운 내용이 여기에 표시됩니다 -->
+        </div>
+      </div>
     </div>
-    
-    <div id="toc" class="toc">
-        <!-- 목차가 여기에 표시됩니다 -->
-    </div>
-    
-    <!-- 맨 위로 가기 버튼 -->
-    <button id="scroll-to-top" class="scroll-to-top" title="맨 위로 가기"></button>
+  </div>
+  
+  <div id="toc" class="toc">
+    <!-- 목차가 여기에 표시됩니다 -->
+  </div>
+  
+  <!-- 맨 위로 가기 버튼 -->
+  <button id="scroll-to-top" class="scroll-to-top" title="맨 위로 가기"></button>
 
-    <!-- Scripts -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.3.2/markdown-it.min.js"></script>
-    <!-- tocbot library for stable TOC tracking -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.21.2/tocbot.min.js"></script>
-    <script src="education-script.js"></script>
+  <!-- Scripts -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.3.2/markdown-it.min.js"></script>
+  <!-- tocbot library for stable TOC tracking -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.21.2/tocbot.min.js"></script>
+  <script src="education-script.js"></script>
 </body>
 </html>
