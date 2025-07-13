@@ -83,10 +83,17 @@ document.addEventListener("DOMContentLoaded", function() {
   function updateTOC() {
       const headers = mdViewer.querySelectorAll('h1, h2, h3, h4');
       toc.innerHTML = '';
+      
+      if (headers.length > 0) {
+          const title = document.createElement('h3');
+          title.textContent = 'Table of Contents';
+          toc.appendChild(title);
+      }
+      
       const ul = document.createElement('ul');
       headers.forEach(header => {
           if (!header.id) {
-              header.id = header.textContent.trim().toLowerCase().replace(/\s+/g, '-');
+              header.id = header.textContent.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
           }
           const li = document.createElement('li');
           const a = document.createElement('a');

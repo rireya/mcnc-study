@@ -1,67 +1,70 @@
 body {
-  font-family: "Roboto", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   font-size: 16px;
+  line-height: 1.5;
+  color: #1f2328;
   margin: 0;
   padding: 0;
   display: flex;
   height: 100vh;
+  background-color: #ffffff;
 }
 
 .sidebar {
   width: 260px;
-  background-color: #f4f4f4;
-  padding: 10px;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  background-color: #f6f8fa;
+  padding: 16px;
+  box-shadow: inset -1px 0 0 #d1d9e0;
   position: fixed;
   top: 0;
   left: 0;
   height: 100%;
   overflow-y: auto;
+  border-right: 1px solid #d1d9e0;
 }
 
 .sidebar h1 {
   font-size: 1.5em;
+  font-weight: 600;
   margin-bottom: 1em;
-}
-
-.sidebar-section {
-  margin-bottom: 1em;
+  color: #1f2328;
+  border-bottom: 1px solid #d1d9e0;
+  padding-bottom: 0.5em;
 }
 
 .sidebar-section h2 {
   font-size: 0.875em;
+  font-weight: 600;
   margin-bottom: 0.5em;
-  color: #666;
+  color: #656d76;
   text-transform: uppercase;
-}
-
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  margin: 0.5em 0;
+  letter-spacing: 0.5px;
 }
 
 .sidebar ul li a {
   text-decoration: none;
-  color: #333;
+  color: #1f2328;
   display: block;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.sidebar ul li a:hover {
+  background-color: #f3f4f6;
 }
 
 .sidebar ul li a.active {
-  background-color: #007bff;
+  background-color: #0969da;
   color: white;
 }
 
 .sidebar-divider {
   margin: 1em 0;
   border: none;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #d1d9e0;
 }
 
 .content {
@@ -74,49 +77,201 @@ body {
 }
 
 #md-viewer {
-  padding: 20px;
+  padding: 32px;
   background: #fff;
-  border-right: 1px solid #ddd; /* Separator line */
+  border-right: 1px solid #d1d9e0;
+  max-width: none;
 }
 
-/* Custom styling for inline code emphasis */
-code {
-  background-color: #f8f9fa;
-  padding: 2px 4px;
-  border-radius: 4px;
+/* GitHub-style headings */
+#md-viewer h1,
+#md-viewer h2,
+#md-viewer h3,
+#md-viewer h4,
+#md-viewer h5,
+#md-viewer h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #1f2328;
+}
+
+#md-viewer h1 {
+  font-size: 2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #d1d9e0;
+}
+
+#md-viewer h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #d1d9e0;
+}
+
+#md-viewer h3 {
+  font-size: 1.25em;
+}
+
+#md-viewer h4 {
+  font-size: 1em;
+}
+
+#md-viewer h5 {
+  font-size: 0.875em;
+}
+
+#md-viewer h6 {
+  font-size: 0.85em;
+  color: #656d76;
+}
+
+/* GitHub-style paragraphs and spacing */
+#md-viewer p {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+#md-viewer blockquote {
+  padding: 0 1em;
+  color: #656d76;
+  border-left: 0.25em solid #d1d9e0;
+  margin: 0 0 16px 0;
+}
+
+#md-viewer ul,
+#md-viewer ol {
+  margin-top: 0;
+  margin-bottom: 16px;
+  padding-left: 2em;
+}
+
+#md-viewer li {
+  word-wrap: break-all;
+}
+
+#md-viewer li > p {
+  margin-top: 16px;
+}
+
+#md-viewer li + li {
+  margin-top: 0.25em;
+}
+
+#md-viewer hr {
+  height: 0.25em;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #d1d9e0;
+  border: 0;
+}
+
+/* GitHub-style inline code */
+#md-viewer code {
+  padding: 0.2em 0.4em;
+  margin: 0;
   font-size: 85%;
-  color: #d63384;
+  white-space: break-spaces;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
-/* Styling for preformatted code blocks */
+/* GitHub-style code blocks */
+#md-viewer pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+#md-viewer pre code {
+  display: inline;
+  max-width: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+/* GitHub-style table styling */
+#md-viewer table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+#md-viewer table th,
+#md-viewer table td {
+  padding: 6px 13px;
+  border: 1px solid #d1d9e0;
+}
+
+#md-viewer table th {
+  font-weight: 600;
+  background-color: #f6f8fa;
+}
+
+#md-viewer table tr {
+  background-color: #ffffff;
+  border-top: 1px solid #d1d9e0;
+}
+
+#md-viewer table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+#md-viewer table img {
+  background-color: transparent;
+}
+
+/* GitHub-style syntax highlighting */
 .hljs {
   background-color: #f6f8fa !important;
+  color: #1f2328 !important;
   padding: 16px;
   border-radius: 6px;
   position: relative;
   overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
-/* Copy button for code blocks */
+/* GitHub-style copy button */
 .copy-button {
   position: absolute;
-  right: 16px;
-  top: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 5px 10px;
+  right: 8px;
+  top: 8px;
+  background-color: #f6f8fa;
+  color: #1f2328;
+  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+  padding: 4px 8px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  transition: background-color 0.2s;
 }
 
 .copy-button:hover {
-  background-color: #0056b3;
+  background-color: #f3f4f6;
+  border-color: #d1d9e0;
 }
 
-/* Table of contents */
+/* GitHub-style table of contents */
 .toc {
   position: fixed;
   right: 0;
@@ -124,32 +279,173 @@ code {
   width: 240px;
   height: 100%;
   overflow-y: auto;
-  background: #fff;
-  padding: 20px;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  background: #ffffff;
+  padding: 16px;
+  border-left: 1px solid #d1d9e0;
+}
+
+.toc h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #656d76;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .toc ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 .toc ul li {
-  margin: 0.5em 0;
+  margin: 0;
 }
 
 .toc ul li a {
   text-decoration: none;
-  color: #666;
+  color: #656d76;
   display: block;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.75em; /* Smaller font size */
-  padding-left: calc(5px + var(--level, 0) * 10px); /* Indent based on level */
+  font-size: 13px;
+  line-height: 1.5;
+  padding-left: calc(8px + var(--level, 0) * 12px);
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.toc ul li a:hover {
+  color: #1f2328;
+  background-color: #f6f8fa;
 }
 
 .toc ul li a.active {
-  background-color: #d3d3d3;
-  color: #000;
+  background-color: #f6f8fa;
+  color: #0969da;
+  font-weight: 500;
+}
+
+/* GitHub-style images */
+#md-viewer img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #ffffff;
+  border-radius: 6px;
+}
+
+/* GitHub-style links */
+#md-viewer a {
+  color: #0969da;
+  text-decoration: none;
+}
+
+#md-viewer a:hover {
+  text-decoration: underline;
+}
+
+/* GitHub-style badges and shields */
+#md-viewer img[src*="shields.io"],
+#md-viewer img[src*="badge"] {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 2px;
+}
+
+/* GitHub-style emoji */
+#md-viewer .emoji {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.1em;
+}
+
+/* GitHub-style task lists */
+#md-viewer .task-list-item {
+  list-style-type: none;
+}
+
+#md-viewer .task-list-item-checkbox {
+  margin: 0 0.2em 0.25em -1.4em;
+  vertical-align: middle;
+}
+
+.sidebar-section {
+  margin-bottom: 1em;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 0.25em 0;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .toc {
+    display: none;
+  }
+  
+  .content {
+    margin-right: 0;
+    width: calc(100% - 260px);
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .content {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  #md-viewer {
+    padding: 16px;
+  }
+  
+  #md-viewer h1 {
+    font-size: 1.75em;
+  }
+  
+  #md-viewer h2 {
+    font-size: 1.375em;
+  }
+  
+  #md-viewer table {
+    font-size: 14px;
+  }
+  
+  #md-viewer table th,
+  #md-viewer table td {
+    padding: 4px 8px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .sidebar,
+  .toc {
+    display: none;
+  }
+  
+  .content {
+    margin: 0;
+    width: 100%;
+  }
+  
+  #md-viewer {
+    padding: 0;
+  }
 }
