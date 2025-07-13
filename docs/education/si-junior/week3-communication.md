@@ -695,11 +695,29 @@ if (isTouchDevice()) {
 
 ## 📚 지속적 학습 자료
 
-### 🔗 필수 팔로우
+### 🔗 블로그 및 커뮤니티
 
-- **기술 블로그**: 우아한기술블로그, 카카오기술블로그, 네이버기술블로그
-- **개발 커뮤니티**: 개발자스럽다, 프론트엔드 개발그룹, Vue.js 한국 사용자 모임
-- **뉴스레터**: JavaScript Weekly, CSS Tricks, Smashing Magazine
+#### 기술 블로그
+
+- <a href="https://d2.naver.com/" target="_blank">**네이버기술블로그**</a> - 네이버의 검색, AI, 클라우드 등 다양한 분야의 기술 연구와 개발 경험을 공유
+- <a href="https://tech.kakao.com/" target="_blank">**카카오기술블로그**</a> - 카카오의 다양한 서비스 개발 과정과 기술적 도전 과제들을 공유하는 기술 블로그
+- <a href="https://techblog.woowahan.com/" target="_blank">**우아한기술블로그**</a> - 배민을 운영하는 우아한형제들의 기술 블로그. 대규모 서비스 운영 경험과 실무 중심의 블로그
+
+#### 개발 커뮤니티
+
+- <a href="https://yozm.wishket.com/" target="_blank">**개발자스럽다**</a> - 위시켓에서 운영하는 개발자 중심 미디어. 트렌드, 인사이트, 실무 팁 등 개발자에게 유용한 콘텐츠 제공
+- <a href="https://vuejs.kr/" target="_blank">**Vue.js 한국 사용자 모임**</a> - Vue.js 한국 커뮤니티. 공식 문서 번역, 기술 세미나, 학습 자료 공유
+- <a href="https://www.velopers.kr/" target="_blank">**벨로퍼스**</a> - 개발자를 위한 블로그 플랫폼. 다양한 개발자들의 기술 포스팅과 경험 공유
+
+#### 기술 뉴스
+
+- <a href="https://news.hada.io/" target="_blank">**긱뉴스**</a> - 해외 기술 뉴스를 한국어로 번역 제공. 최신 개발 트렌드, 도구, 라이브러리 소식을 빠르게 접할 수 있음
+
+#### 뉴스레터
+
+- <a href="https://javascriptweekly.com/" target="_blank">**JavaScript Weekly**</a> - 매주 발행되는 JavaScript 관련 뉴스레터. 최신 라이브러리, 튜토리얼, 도구 소개
+- <a href="https://css-tricks.com/" target="_blank">**CSS-Tricks**</a> - CSS, 프론트엔드 개발 기법에 대한 심도 있는 아티클과 튜토리얼 제공
+- <a href="https://www.smashingmagazine.com/" target="_blank">**Smashing Magazine**</a> - 웹 디자인과 개발에 관한 고품질 아티클, UX/UI 인사이트 제공
 
 ---
 

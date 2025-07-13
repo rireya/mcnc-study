@@ -466,7 +466,7 @@ window.testUtils = {
 
 ## 📚 참고 자료
 
-### 🔗 필수 학습 링크
+### 🔗 학습 링크
 
 - <a href="https://git-scm.com/book/ko/v2" target="_blank">Git 기초 가이드</a>
 - <a href="https://github.com/airbnb/javascript" target="_blank">JavaScript 스타일 가이드</a>
