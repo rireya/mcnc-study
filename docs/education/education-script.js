@@ -33,6 +33,11 @@ const md = window.markdownit({
 
 // 초기화
 document.addEventListener('DOMContentLoaded', function() {
+    // 맨 위로 버튼 초기 상태 설정
+    if (scrollToTopBtn) {
+        scrollToTopBtn.classList.remove('visible');
+    }
+    
     loadCoursesConfig().then(() => {
         initializeSelectors();
         setupEventListeners();
@@ -444,6 +449,11 @@ function addCopyButtons() {
 function setupScrollToTop() {
     const contentDiv = document.querySelector('.content');
     
+    // 초기 상태 설정 - 버튼 숨김
+    if (scrollToTopBtn) {
+        scrollToTopBtn.classList.remove('visible');
+    }
+    
     // 기존 이벤트 리스너 제거 (중복 방지)
     contentDiv.removeEventListener('scroll', handleScroll);
     scrollToTopBtn.removeEventListener('click', scrollToTop);
@@ -453,25 +463,40 @@ function setupScrollToTop() {
     
     // 버튼 클릭 이벤트
     scrollToTopBtn.addEventListener('click', scrollToTop);
+    
+    // 초기 스크롤 상태 체크
+    handleScroll();
 }
 
 // 스크롤 핸들러를 분리하여 재사용 가능하게 만듦
 function handleScroll() {
     const contentDiv = document.querySelector('.content');
-    if (contentDiv.scrollTop > 300) {
+    // 스크롤 위치가 0보다 클 때만 버튼 표시 (완전히 맨 위가 아닐 때만)
+    if (contentDiv && contentDiv.scrollTop > 0) {
         scrollToTopBtn.classList.add('visible');
     } else {
         scrollToTopBtn.classList.remove('visible');
     }
 }
 
-// 맨 위로 스크롤
+// 맨 위로 스크롤 - content와 TOC 모두 스크롤
 function scrollToTop() {
     const contentDiv = document.querySelector('.content');
+    const tocDiv = document.querySelector('.toc');
+    
+    // content 영역 스크롤
     contentDiv.scrollTo({
         top: 0,
         behavior: 'smooth'
     });
+    
+    // TOC 영역도 함께 스크롤
+    if (tocDiv) {
+        tocDiv.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
 }
 
 // 콘텐츠 표시
@@ -592,9 +617,64 @@ function setupTOCActiveTracking() {
         // 콜백 함수들
         onClick: function(e) {
             console.log('TOC 링크 클릭:', e.target.textContent);
+        },
+        
+        // 활성 항목이 변경될 때 호출되는 콜백
+        onScroll: function(activeEl) {
+            if (activeEl) {
+                scrollTOCToActiveItem(activeEl);
+            }
         }
     });
     
     window.tocbotInstance = true;
     console.log('tocbot으로 TOC 활성화 추적이 설정되었습니다.');
+}
+
+// TOC에서 활성 항목이 보이도록 스크롤 조정하는 함수
+function scrollTOCToActiveItem(activeElement) {
+    const tocContainer = document.querySelector('.toc');
+    if (!tocContainer || !activeElement) return;
+    
+    // 활성 항목의 위치 정보
+    const activeItemRect = activeElement.getBoundingClientRect();
+    const tocContainerRect = tocContainer.getBoundingClientRect();
+    
+    // TOC 컨테이너의 스크롤 가능한 영역 계산
+    const tocScrollTop = tocContainer.scrollTop;
+    const tocHeight = tocContainer.clientHeight;
+    const tocHeaderHeight = 70; // TOC 헤더 높이
+    
+    // 활성 항목이 TOC 컨테이너 내에서의 상대적 위치
+    const activeItemTop = activeItemRect.top - tocContainerRect.top + tocScrollTop;
+    const activeItemBottom = activeItemTop + activeElement.offsetHeight;
+    
+    // 보여야 할 스크롤 영역 계산
+    const visibleTop = tocScrollTop + tocHeaderHeight;
+    const visibleBottom = tocScrollTop + tocHeight;
+    
+    let newScrollTop = tocScrollTop;
+    
+    // 활성 항목이 보이는 영역 위에 있는 경우
+    if (activeItemTop < visibleTop) {
+        newScrollTop = activeItemTop - tocHeaderHeight - 10; // 10px 여백
+    }
+    // 활성 항목이 보이는 영역 아래에 있는 경우
+    else if (activeItemBottom > visibleBottom) {
+        newScrollTop = activeItemBottom - tocHeight + 10; // 10px 여백
+    }
+    
+    // 스크롤이 필요한 경우에만 실행
+    if (Math.abs(newScrollTop - tocScrollTop) > 5) { // 5px 임계값
+        tocContainer.scrollTo({
+            top: Math.max(0, newScrollTop), // 최소값 0
+            behavior: 'smooth'
+        });
+        
+        console.log('TOC 스크롤 조정:', {
+            from: tocScrollTop,
+            to: newScrollTop,
+            activeItem: activeElement.textContent.trim()
+        });
+    }
 }

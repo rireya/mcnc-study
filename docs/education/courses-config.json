@@ -2,23 +2,48 @@
   "courses": {
     "si-junior": {
       "name": "SI 신입 교육",
-      "description": "SI 프로젝트 신규 투입 개발자 교육",
+      "description": "SI 프로젝트 신규 투입 개발자 3주 완성 교육",
       "icon": "🏢",
       "files": [
         {
           "filename": "README.md",
           "title": "📋 교육 개요",
-          "description": "SI 신입 교육 전체 개요"
+          "description": "SI 신입 교육 전체 개요 및 커리큘럼"
         },
         {
-          "filename": "day1.md",
-          "title": "📚 Day 1 - SI 기초",
-          "description": "SI 프로젝트 기초 이해"
+          "filename": "week1-foundation.md",
+          "title": "📚 Week 1 - 개발 기초와 실무 준비",
+          "description": "코딩 컨벤션, Git, 디버깅, 테스트 환경, 프로젝트 기록 관리"
         },
         {
-          "filename": "day2.md",
-          "title": "📚 Day 2 - Vue 3 기초",
-          "description": "Vue 3 환경 설정 및 기본 개념"
+          "filename": "week2-quality.md",
+          "title": "📚 Week 2 - 코드 품질과 웹 기술",
+          "description": "코드 품질, 웹 표준, jQuery, 브라우저 호환성, Ionic 기초"
+        },
+        {
+          "filename": "week3-communication.md",
+          "title": "📚 Week 3 - 소통과 문제해결",
+          "description": "팀 커뮤니케이션, 문제 해결, 모바일 UX, AI 도구 활용"
+        },
+        {
+          "filename": "ionic-guide.md",
+          "title": "📱 Ionic 프레임워크 가이드",
+          "description": "Ionic 상세 학습 가이드 (추가 교육 자료)"
+        },
+        {
+          "filename": "troubleshooting-guide.md",
+          "title": "🔧 문제해결 가이드",
+          "description": "실무에서 자주 발생하는 문제와 해결 방법"
+        },
+        {
+          "filename": "ai-tools-guide.md",
+          "title": "🤖 AI 도구 활용 가이드",
+          "description": "개발 생산성을 높이는 AI 도구 활용법"
+        },
+        {
+          "filename": "terms-dictionary.md",
+          "title": "📖 용어 사전",
+          "description": "SI 프로젝트 필수 용어 정리"
         }
       ]
     },

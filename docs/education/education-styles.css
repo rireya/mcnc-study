@@ -7,6 +7,7 @@
 
 .content {
     margin-left: 240px !important;
+    margin-right: 280px !important; /* TOC 너비 증가에 맞춰 280px로 조정 */
 }
 
 /* 사이드바 컨트롤 영역 스타일 */
@@ -124,44 +125,86 @@
     color: #0969da;
 }
 
-/* 맨 위로 가기 버튼 */
+/* 맨 위로 가기 버튼 - 모던 플로팅 디자인 */
 .scroll-to-top {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background: #0969da;
-    color: white;
-    border: none;
+    bottom: 40px;
+    right: 340px; /* TOC 영역(280px) + 여백(60px) */
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(229, 231, 235, 0.8);
     border-radius: 50%;
     cursor: pointer;
-    font-size: 18px;
-    display: none;
+    display: none; /* 기본 숨김 */
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.08),
+        0 4px 10px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
 }
 
+/* CSS로 만든 화살표 아이콘 */
+.scroll-to-top::before {
+    content: '';
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #6b7280;
+    border-right: none;
+    border-bottom: none;
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: all 0.25s ease;
+}
+
+/* 호버 상태에서의 스타일 수정 */
 .scroll-to-top:hover {
-    background: #0553a1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(79, 70, 229, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 
+        0 20px 40px rgba(79, 70, 229, 0.12),
+        0 8px 16px rgba(0, 0, 0, 0.06);
 }
 
+.scroll-to-top:hover::before {
+    border-color: #4f46e5;
+    transform: translate(-50%, -50%) rotate(45deg) scale(1.1);
+}
+
+/* 액티브 상태 */
+.scroll-to-top:active {
+    transform: translateY(-1px);
+    transition: all 0.1s ease;
+}
+
+/* 버튼이 보일 때 */
 .scroll-to-top.visible {
     display: block;
-    animation: fadeIn 0.3s ease;
+    animation: gentleFadeIn 0.4s ease-out;
 }
 
-@keyframes fadeIn {
-    from {
+/* 부드럽고 편안한 등장 애니메이션 */
+@keyframes gentleFadeIn {
+    0% {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(10px) scale(0.9);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    60% {
+        opacity: 0.8;
+        transform: translateY(-2px) scale(1.02);
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .scroll-to-top {
+        right: 30px;
+        bottom: 30px;
     }
 }
 
@@ -261,61 +304,172 @@
     margin-bottom: 12px;
 }
 
-/* TOC 활성 항목 강조 스타일 */
+/* TOC 활성 항목 강조 스타일 - border 안정화 */
 .toc ul li a.active {
     background-color: #0969da !important;
     color: white !important;
     font-weight: 600 !important;
-    border-left: 3px solid #ffffff;
-    box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3);
+    /* border 깜빡임 방지 - 투명한 border 유지 */
+    border: 1px solid transparent;
+    border-left: 1px solid transparent;
+    box-shadow: 0 1px 2px rgba(9, 105, 218, 0.2);
+    transition: all 0.15s ease;
+    /* 말줄임 상태 유지 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .toc ul li a.active:hover {
     background-color: #0553a1 !important;
     color: white !important;
+    /* hover 시에도 border 유지 */
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
 }
 
-/* TOC 스크롤 개선 */
+/* TOC 스크롤 추적 개선 */
 .toc {
-    scrollbar-width: thin;
-    scrollbar-color: #d1d9e0 transparent;
+    /* 스크롤 동작 최적화 */
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
+/* 활성 항목 강조 개선 */
+.toc .is-active-link {
+    background-color: #0969da !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: 1px solid transparent;
+    border-left: 3px solid #2ea043 !important; /* 활성 항목에 녹색 강조선 */
+    box-shadow: 0 2px 8px rgba(9, 105, 218, 0.3);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+/* 활성 항목 애니메이션 효과 */
+.toc .is-active-link::after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 4px;
+    background: #2ea043;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(-50%) scale(1.2);
+    }
+}
+
+/* TOC 스크롤바 스타일 개선 */
 .toc::-webkit-scrollbar {
     width: 6px;
 }
 
 .toc::-webkit-scrollbar-track {
-    background: transparent;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    margin-top: 80px; /* sticky header 공간 확보 */
 }
 
 .toc::-webkit-scrollbar-thumb {
-    background-color: #d1d9e0;
+    background: linear-gradient(180deg, rgba(9, 105, 218, 0.4) 0%, rgba(9, 105, 218, 0.6) 100%);
     border-radius: 3px;
+    transition: background 0.2s ease;
 }
 
 .toc::-webkit-scrollbar-thumb:hover {
-    background-color: #bcc3ca;
+    background: linear-gradient(180deg, rgba(9, 105, 218, 0.6) 0%, rgba(9, 105, 218, 0.8) 100%);
 }
 
-/* TOC 제목 스타일 개선 */
+/* TOC 목록 영역이 sticky header 아래로 밀리지 않도록 */
+.toc ul {
+    margin-top: 8px; /* sticky header 아래 여백 */
+}
+
+/* TOC 제목 스타일 개선 - 좌우로 꽉차게 */
 .toc h3 {
     position: sticky;
     top: 0;
-    background: white;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     z-index: 10;
-    padding: 8px 0;
-    margin-bottom: 12px !important;
-    border-bottom: 1px solid #e1e8ed;
+    padding: 20px 0 12px 0;
+    margin: -16px -16px 16px -16px !important; /* 좌우 마진을 음수로 하여 패딩 영역까지 확장 */
+    border-bottom: 2px solid #e1e8ed;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    font-size: 13px;
+    font-weight: 700;
+    color: #0969da;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-align: center;
+    position: relative;
 }
 
-/* TOC 링크 hover 효과 개선 (성능 최적화) */
+.toc h3::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, #0969da, #2ea043);
+    border-radius: 1px;
+}
+
+/* TOC 링크 hover 효과 개선 - border 깜빡임 완전 제거 */
 .toc ul li a:hover {
     background-color: #f6f8fa;
     color: #0969da;
-    border-left: 2px solid #0969da;
-    padding-left: calc(6px + var(--level, 0) * 12px);
-    /* transition 제거로 성능 개선 */
+    /* border 깜빡임 완전 제거 - 투명한 상태 유지 */
+    border: 1px solid transparent;
+    border-left: 1px solid transparent;
+    /* 부드럽고 빠른 전환 */
+    box-shadow: 0 1px 2px rgba(9, 105, 218, 0.08);
+    transition: all 0.15s ease;
+    font-weight: 500;
+    /* 말줄임 상태 유지 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* TOC 링크 기본 상태 개선 - border 깜빡임 방지 */
+.toc ul li a,
+.toc .toc-link {
+    /* 기본 상태에서도 살짝 둥근 모서리와 부드러운 패딩 */
+    border-radius: 8px;
+    margin-bottom: 1px;
+    /* border 깜빡임 방지 - 기본 상태에서도 투명한 border 유지 */
+    border: 1px solid transparent;
+}
+
+/* 호버 효과를 위한 추가 스타일 */
+.toc ul li:hover {
+    /* 리스트 아이템 자체에도 살짝 효과 추가 */
+    background-color: transparent;
+}
+
+/* 텍스트 확장 시 부드러운 애니메이션을 위한 컨테이너 개선 */
+.toc ul li {
+    position: relative;
+    overflow: visible; /* 호버 시 확장을 위해 */
 }
 
 /* TOC 레벨별 스타일 */
@@ -335,22 +489,32 @@
     opacity: 0.8;
 }
 
-/* tocbot 호환성을 위한 추가 스타일 */
+/* tocbot 호환성을 위한 추가 스타일 - border 안정화 */
 /* tocbot이 생성하는 클래스들을 기존 스타일과 맞춤 */
 .toc .is-active-link {
     background-color: #0969da !important;
     color: white !important;
     font-weight: 600 !important;
-    border-left: 3px solid #ffffff;
-    box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3);
+    /* border 깜빡임 방지 */
+    border: 1px solid transparent;
+    border-left: 1px solid transparent;
+    box-shadow: 0 1px 2px rgba(9, 105, 218, 0.2);
+    transition: all 0.15s ease;
+    /* 말줄임 상태 유지 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .toc .is-active-link:hover {
     background-color: #0553a1 !important;
     color: white !important;
+    /* hover 시에도 border 유지 */
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
 }
 
-/* tocbot 기본 스타일 재정의 */
+/* tocbot 기본 스타일 재정의 - 깔끔한 애니메이션 */
 .toc .toc-list {
     margin: 0;
     padding: 0;
@@ -368,13 +532,34 @@
     color: #656d76;
     text-decoration: none;
     border-left: 1px solid transparent;
-    transition: none; /* 성능 최적화 */
+    transition: all 0.15s ease;
+    border-radius: 6px;
+    margin-bottom: 2px;
+    font-size: 13px;
+    line-height: 1.4;
+    /* 말줄임 처리 - 항상 유지 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    /* border 깜빡임 방지 - 기본 상태에서도 투명한 border 유지 */
+    border: 1px solid transparent;
 }
 
 .toc .toc-link:hover {
     background-color: #f6f8fa;
     color: #0969da;
-    border-left: 2px solid #0969da;
+    /* border 깜빡임 완전 제거 - 투명한 상태 유지 */
+    border: 1px solid transparent;
+    border-left: 1px solid transparent;
+    /* 깔끔한 효과만 */
+    box-shadow: 0 1px 2px rgba(9, 105, 218, 0.08);
+    /* 말줄임 상태 유지 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.15s ease;
+    font-weight: 500;
 }
 
 /* tocbot 중첩 리스트 스타일 */
@@ -428,10 +613,11 @@
     
     .scroll-to-top {
         bottom: 20px;
-        right: 20px;
-        width: 45px;
-        height: 45px;
-        font-size: 16px;
+        right: 20px; /* 모바일에서는 일반적인 위치 */
+        width: 52px;
+        height: 52px;
+        font-size: 18px;
+        border-radius: 14px;
     }
 }
 
@@ -442,6 +628,14 @@
     
     .content {
         margin-right: 0 !important;
-        width: calc(100% - 240px) !important; /* 280px -> 240px로 변경 */
+        width: calc(100% - 240px) !important;
+    }
+    
+    /* TOC가 숨겨진 상태에서는 버튼을 일반적인 위치로 */
+    .scroll-to-top {
+        right: 30px;
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
     }
 }

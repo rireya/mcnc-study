@@ -276,12 +276,13 @@ body {
   position: fixed;
   right: 0;
   top: 0;
-  width: 240px;
-  height: 100%;
+  width: 280px; /* 240px → 280px로 증가 */
+  height: 100vh;
   overflow-y: auto;
   background: #ffffff;
-  padding: 16px;
+  padding: 16px 16px 60px 16px; /* 하단 패딩 추가 */
   border-left: 1px solid #d1d9e0;
+  box-sizing: border-box; /* 박스 사이징 추가 */
 }
 
 .toc h3 {
@@ -307,24 +308,43 @@ body {
   text-decoration: none;
   color: #656d76;
   display: block;
-  padding: 4px 8px;
+  padding: 6px 8px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.4;
   padding-left: calc(8px + var(--level, 0) * 12px);
-  transition: color 0.2s, background-color 0.2s;
+  transition: all 0.15s ease;
+  /* 말줄임 처리 - 항상 유지 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  /* border 깜빡임 방지 - 기본 상태에서도 투명한 border 유지 */
+  border: 1px solid transparent;
 }
 
+/* 툴팁 효과 - border 깜빡임 완전 제거 */
 .toc ul li a:hover {
-  color: #1f2328;
+  color: #0969da;
   background-color: #f6f8fa;
+  /* border 깜빡임 완전 제거 - 투명한 상태 유지 */
+  border: 1px solid transparent;
+  /* 레이아웃 변화 없이 색상과 배경만 변화 */
+  box-shadow: 0 1px 2px rgba(9, 105, 218, 0.08);
+  transition: all 0.15s ease;
+  font-weight: 500;
+  /* 말줄임 상태 유지 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .toc ul li a.active {
   background-color: #f6f8fa;
   color: #0969da;
   font-weight: 500;
+  transition: all 0.15s ease;
 }
 
 /* GitHub-style images */
