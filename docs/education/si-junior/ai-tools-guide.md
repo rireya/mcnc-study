@@ -1272,34 +1272,38 @@ After (AI-네이티브 개발자):
 ✅ 윤리적 기술 사용 의식
 ```
 
-**🚀 AI와 함께 성장하는 개발자가 되어**  
-**더 창의적이고 의미 있는 일에 집중하세요!**
+---
 
-### 추가 학습 자료
+## 📚 추가 학습 자료
 
-```text
-📚 추천 리소스:
+### 공식 문서
 
-공식 문서:
-- [GitHub Copilot 가이드](https://docs.github.com/en/copilot)
-- [OpenAI API 문서](https://platform.openai.com/docs)
-- [Anthropic Claude 가이드](https://docs.anthropic.com)
-- [Google Gemini 개발자 문서](https://ai.google.dev/docs)
-- [Cursor 공식 문서](https://docs.cursor.sh)
-- [Bolt 사용 가이드](https://bolt.new/docs)
+- <a href="https://docs.github.com/en/copilot" target="_blank">GitHub Copilot 가이드</a>
+- <a href="https://platform.openai.com/docs" target="_blank">OpenAI API 문서</a>
+- <a href="https://docs.anthropic.com" target="_blank">Anthropic Claude 가이드</a>
+- <a href="https://ai.google.dev/docs" target="_blank">Google Gemini 개발자 문서</a>
+- <a href="https://docs.cursor.sh" target="_blank">Cursor 공식 문서</a>
+- <a href="https://bolt.new/docs" target="_blank">Bolt 사용 가이드</a>
 
-실습 플랫폼:
-- [bolt.new](https://bolt.new) - 즉석 프로토타이핑
-- [cursor.sh](https://cursor.sh) - AI 네이티브 에디터
-- [v0.dev](https://v0.dev) - Next.js 앱 생성
-- [replit.com](https://replit.com) - 온라인 IDE + AI
+### 실습 플랫폼
 
-참고 문서:
-- [AI-네이티브 소프트웨어 엔지니어 가이드](https://news.hada.io/topic?id=21890)
+- <a href="https://bolt.new" target="_blank">bolt.new</a> - 즉석 프로토타이핑
+- <a href="https://cursor.sh" target="_blank">cursor.sh</a> - AI 네이티브 에디터
+- <a href="https://v0.dev" target="_blank">v0.dev</a> - Next.js 앱 생성
+- <a href="https://replit.com" target="_blank">replit.com</a> - 온라인 IDE + AI
 
-지속 학습:
+### 참고 문서
+
+- <a href="https://news.hada.io/topic?id=21890" target="_blank">AI-네이티브 소프트웨어 엔지니어 가이드</a>
+
+### 지속 학습 가이드
+
 - AI 기술 뉴스레터 구독
 - 새로운 도구 정기적 체험
 - 동료들과 경험 공유
 - 개인 프로젝트에 AI 적극 활용
-```
+
+---
+
+**🚀 AI와 함께 성장하는 개발자가 되어**  
+**더 창의적이고 의미 있는 일에 집중하세요!**

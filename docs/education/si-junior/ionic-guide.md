@@ -829,6 +829,6 @@ const save = async () => {
 
 ## 🔗 공식 문서
 
-- **[Ionic Framework 공식 문서](https://ionicframework.com/docs)**
-- **[Ionic Vue 가이드](https://ionicframework.com/docs/vue/overview)**
-- **[Ionic UI Components](https://ionicframework.com/docs/components)**
+- **<a href="https://ionicframework.com/docs" target="_blank">Ionic Framework 공식 문서</a>**
+- **<a href="https://ionicframework.com/docs/vue/overview" target="_blank">Ionic Vue 가이드</a>**
+- **<a href="https://ionicframework.com/docs/components" target="_blank">Ionic UI Components</a>**

@@ -701,7 +701,6 @@ document.getElementById('myButton').addEventListener('click', function() {
 
 ---
 
-
 ## 📱 Ionic 컴포넌트 기초 소개
 
 ### 🎯 Ionic 컴포넌트란?
@@ -829,32 +828,6 @@ const addUser = () => {
 }
 </style>
 ```
-
-### 📚 학습 순서
-
-```text
-🎯 Ionic 컴포넌트 학습 로드맵:
-
-1단계: 기본 이해 (오늘)
-   - Ionic 컴포넌트 개념
-   - 기존 Vue 프로젝트 통합 방법
-   - 모바일 UI 적용 사례
-
-2단계: 상세 학습 (추가 교육)
-   - 주요 컴포넌트 활용법
-   - 퍼블리셔 협업 방법
-   - 내부 플랫폼 최적화
-
-3단계: 실무 적용
-   - 실제 프로젝트 적용
-   - 커스텀 테마 구현
-   - 성능 최적화
-```
-
-### 🔗 연관 학습 자료
-
-- **[Ionic 컴포넌트 상세 가이드](./ionic-guide.md)** - 컴포넌트별 실무 활용법
-- **Vue Study 프로젝트** - Ionic Vue 적용 예제 (선택 실습)
 
 ---
 
