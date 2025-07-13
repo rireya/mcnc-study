@@ -18,6 +18,9 @@ let configUpdateInterval = null;
 let intersectionObserver = null;
 let tocScrollHandler = null;
 
+// 브라우저 히스토리 관리를 위한 변수
+let isHistoryUpdate = false;
+
 // Markdown-it 인스턴스 생성
 const md = window.markdownit({
     html: true,
@@ -53,6 +56,9 @@ document.addEventListener('DOMContentLoaded', function() {
             handleCourseChange();
         }
     });
+    
+    // 초기 히스토리 상태 설정
+    setupInitialHistory();
 });
 
 // 교육 시스템 제목 클릭 이벤트 설정
@@ -131,6 +137,35 @@ function setupEventListeners() {
     if (coursesConfig?.settings?.autoRefresh) {
         configUpdateInterval = setInterval(checkForConfigUpdates, 30000); // 30초마다 체크
     }
+    
+    // 브라우저 뒤로가기/앞으로가기 처리
+    window.addEventListener('popstate', function(event) {
+        if (event.state) {
+            isHistoryUpdate = true;
+            
+            const { courseId, dayFile } = event.state;
+            
+            // UI 업데이트 (히스토리 추가 방지)
+            if (courseId) {
+                courseSelect.value = courseId;
+                handleCourseChange().then(() => {
+                    if (dayFile) {
+                        daySelect.value = dayFile;
+                        loadContent(courseId, dayFile, false); // 히스토리 추가하지 않음
+                    }
+                    isHistoryUpdate = false;
+                });
+            } else {
+                // 초기 상태로 돌아가기
+                courseSelect.value = '';
+                daySelect.value = '';
+                hideContent();
+                isHistoryUpdate = false;
+            }
+            
+            console.log('브라우저 뒤로가기/앞으로가기:', event.state);
+        }
+    });
 }
 
 // 사이드바에 교육 과정 로드
@@ -185,6 +220,15 @@ async function handleCourseChange() {
         daySelect.innerHTML = '<option value="">파일을 불러올 수 없습니다</option>';
         showNotification('교육 자료 목록을 불러올 수 없습니다.', 'error');
     }
+    
+    // 브라우저 히스토리 업데이트 (선택한 과정만)
+    if (history.state && !isHistoryUpdate) {
+        window.history.pushState(
+            { courseId: selectedCourse, dayFile: null },
+            '',
+            window.location.pathname
+        );
+    }
 }
 
 // Day 파일 목록 로드 (설정 파일 기반)
@@ -228,7 +272,7 @@ function handleDayChange() {
 }
 
 // 콘텐츠 로드
-async function loadContent(courseId, dayFile) {
+async function loadContent(courseId, dayFile, updateHistory = true) {
     try {
         const response = await fetch(`./${courseId}/${dayFile}`);
         if (!response.ok) {
@@ -249,6 +293,15 @@ async function loadContent(courseId, dayFile) {
         
         // 컨텐츠 로드 후 맨 위로 스크롤
         scrollToTop();
+        
+        // 브라우저 히스토리 업데이트 (선택한 과정 및 자료)
+        if (updateHistory && !isHistoryUpdate) {
+            window.history.pushState(
+                { courseId, dayFile },
+                '',
+                window.location.pathname
+            );
+        }
         
     } catch (error) {
         console.error('콘텐츠 로드 실패:', error);
@@ -518,6 +571,78 @@ function showContent(html) {
     emptyState.style.display = 'none';
     educationContent.style.display = 'block';
     educationContent.innerHTML = html;
+    
+    // 마크다운 내 교육 자료 링크 처리
+    setupEducationContentLinks();
+}
+
+// 마크다운 콘텐츠 내의 교육 자료 링크를 처리하는 함수
+function setupEducationContentLinks() {
+    // 현재 선택된 과정 ID 가져오기
+    const currentCourse = courseSelect.value;
+    if (!currentCourse || !courses[currentCourse]) return;
+    
+    // 현재 과정의 파일 목록
+    const courseFiles = courses[currentCourse].files;
+    
+    // 모든 링크 요소 찾기
+    const links = educationContent.querySelectorAll('a[href]');
+    
+    links.forEach(link => {
+        const href = link.getAttribute('href');
+        
+        // .md 파일에 대한 링크인지 확인
+        if (href && href.endsWith('.md')) {
+            // 파일명만 추출 (경로 제거)
+            const filename = href.split('/').pop();
+            
+            // 현재 과정의 파일 목록에서 해당 파일 찾기
+            const targetFile = courseFiles.find(file => file.filename === filename);
+            
+            if (targetFile) {
+                // 교육 자료 링크로 변환
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 자료 선택 셀렉터 업데이트
+                    daySelect.value = filename;
+                    
+                    // 해당 자료 로드
+                    loadContent(currentCourse, filename);
+                    
+                    console.log(`교육 자료 로드: ${targetFile.title}`);
+                });
+                
+                // 시각적 표시 개선
+                link.style.color = '#0969da';
+                link.style.textDecoration = 'none';
+                link.style.borderBottom = '1px solid #0969da';
+                link.style.transition = 'all 0.2s ease';
+                
+                // 호버 효과
+                link.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = 'rgba(9, 105, 218, 0.1)';
+                    this.style.borderBottomColor = '#0553a1';
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = 'transparent';
+                    this.style.borderBottomColor = '#0969da';
+                });
+                
+                // 툴팁 추가
+                link.title = `${targetFile.title}로 이동`;
+            } else {
+                // 파일을 찾을 수 없는 경우 링크 비활성화
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                });
+                link.style.color = '#656d76';
+                link.style.textDecoration = 'line-through';
+                link.title = '파일을 찾을 수 없습니다';
+            }
+        }
+    });
 }
 
 // 메모리 정리 함수
