@@ -23,7 +23,7 @@
 
 Vue 스터디 완성 프로젝트를 다운로드하여 참고할 수 있습니다.
 
-[Vue Study Project Download](https://rireya.github.io/mcnc-study/file/vue_study.zip)
+[Vue Study Project Download](https://rireya.github.io/mcnc-study/file/mcnc-study-project.zip)
 
 ## 🛠️ 기술 스택
 
