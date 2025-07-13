@@ -3,7 +3,6 @@
 // 전역 변수
 const courseSelect = document.getElementById('course-select');
 const daySelect = document.getElementById('day-select');
-const statusBar = document.getElementById('status-bar');
 const emptyState = document.getElementById('empty-state');
 const educationContent = document.getElementById('education-content');
 const toc = document.getElementById('toc');
@@ -16,6 +15,8 @@ let courses = {};
 
 // 메모리 관리용 변수들
 let configUpdateInterval = null;
+let intersectionObserver = null;
+let tocScrollHandler = null;
 
 // Markdown-it 인스턴스 생성
 const md = window.markdownit({
@@ -210,8 +211,6 @@ function handleDayChange() {
 // 콘텐츠 로드
 async function loadContent(courseId, dayFile) {
     try {
-        showStatusBar(courseId, dayFile);
-        
         const response = await fetch(`./${courseId}/${dayFile}`);
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -238,23 +237,44 @@ async function loadContent(courseId, dayFile) {
     }
 }
 
-// 상태바 표시 (개선된 버전)
-function showStatusBar(courseId, dayFile) {
-    const course = courses[courseId];
-    const courseName = course?.name || courseId;
-    const courseIcon = course?.icon || '📚';
+// 콘텐츠 숨기기
+function hideContent() {
+    emptyState.style.display = 'block';
+    educationContent.style.display = 'none';
     
-    // 파일 정보 찾기
-    const fileInfo = course?.files?.find(f => f.filename === dayFile);
-    const fileName = fileInfo?.title || dayFile;
+    // tocbot 정리
+    if (typeof tocbot !== 'undefined' && window.tocbotInstance) {
+        tocbot.destroy();
+        window.tocbotInstance = false;
+    }
     
-    statusBar.innerHTML = `
-        <div class="progress-info">
-            ${courseIcon} <strong>${courseName}</strong> - ${fileName} 
-            <span style="float: right;">🕒 ${new Date().toLocaleTimeString()}</span>
+    // Intersection Observer 정리
+    if (intersectionObserver) {
+        intersectionObserver.disconnect();
+        intersectionObserver = null;
+    }
+    
+    // TOC 스크롤 핸들러 정리
+    if (tocScrollHandler) {
+        document.querySelector('.content').removeEventListener('scroll', tocScrollHandler);
+        tocScrollHandler = null;
+    }
+    
+    // TOC와 교육 콘텐츠 정리 (메모리 해제)
+    toc.innerHTML = '';
+    educationContent.innerHTML = '';
+}
+
+// 에러 표시
+function showError(message) {
+    emptyState.style.display = 'none';
+    educationContent.style.display = 'block';
+    educationContent.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: #dc3545;">
+            <h3>⚠️ 오류가 발생했습니다</h3>
+            <p>${message}</p>
         </div>
     `;
-    statusBar.classList.add('active');
 }
 
 // 알림 표시 함수 추가
@@ -335,16 +355,34 @@ function updateTOC() {
     // 기존 TOC 정리 (이벤트 리스너도 함께 제거됨)
     toc.innerHTML = '';
     
+    // 기존 observer 정리
+    if (intersectionObserver) {
+        intersectionObserver.disconnect();
+        intersectionObserver = null;
+    }
+    
     if (headers.length > 0) {
         const title = document.createElement('h3');
         title.textContent = 'Table of Contents';
         toc.appendChild(title);
         
         const ul = document.createElement('ul');
-        headers.forEach(header => {
+        headers.forEach((header, index) => {
+            // 더 안정적인 ID 생성 (순서 기반 + 텍스트 기반)
             if (!header.id) {
-                header.id = header.textContent.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
+                const cleanText = header.textContent
+                    .trim()
+                    .replace(/[🎯📖🔄🏗️💼🤔📝]/g, '') // 이모지 제거
+                    .replace(/[1-6]️⃣/g, '') // 숫자 이모지 제거
+                    .replace(/[\(\)]/g, '') // 괄호 제거
+                    .replace(/[^\w\sㄱ-ㅎㅏ-ㅣ가-힣]/g, '') // 특수문자 제거 (한글 유지)
+                    .replace(/\s+/g, '-') // 공백을 하이픈으로
+                    .toLowerCase();
+                
+                // 헤더 인덱스를 추가하여 유일성 보장
+                header.id = `header-${index}-${cleanText}`;
             }
+            
             const li = document.createElement('li');
             const a = document.createElement('a');
             a.textContent = header.textContent;
@@ -362,6 +400,11 @@ function updateTOC() {
             ul.appendChild(li);
         });
         toc.appendChild(ul);
+        
+        // TOC 생성 후 활성 추적 시작
+        setTimeout(() => {
+            setupTOCActiveTracking();
+        }, 100); // DOM 업데이트 후 실행
     }
 }
 
@@ -438,35 +481,33 @@ function showContent(html) {
     educationContent.innerHTML = html;
 }
 
-// 콘텐츠 숨기기
-function hideContent() {
-    emptyState.style.display = 'block';
-    educationContent.style.display = 'none';
-    statusBar.classList.remove('active');
-    
-    // TOC와 교육 콘텐츠 정리 (메모리 해제)
-    toc.innerHTML = '';
-    educationContent.innerHTML = '';
-}
-
-// 에러 표시
-function showError(message) {
-    emptyState.style.display = 'none';
-    educationContent.style.display = 'block';
-    educationContent.innerHTML = `
-        <div style="text-align: center; padding: 40px; color: #dc3545;">
-            <h3>⚠️ 오류가 발생했습니다</h3>
-            <p>${message}</p>
-        </div>
-    `;
-}
-
 // 메모리 정리 함수
 function cleanup() {
     // 타이머 정리
     if (configUpdateInterval) {
         clearInterval(configUpdateInterval);
         configUpdateInterval = null;
+    }
+    
+    // tocbot 정리
+    if (typeof tocbot !== 'undefined' && window.tocbotInstance) {
+        tocbot.destroy();
+        window.tocbotInstance = false;
+    }
+    
+    // Intersection Observer 정리
+    if (intersectionObserver) {
+        intersectionObserver.disconnect();
+        intersectionObserver = null;
+    }
+    
+    // TOC 스크롤 핸들러 정리
+    if (tocScrollHandler) {
+        const contentDiv = document.querySelector('.content');
+        if (contentDiv) {
+            contentDiv.removeEventListener('scroll', tocScrollHandler);
+        }
+        tocScrollHandler = null;
     }
     
     // DOM 요소 정리
@@ -489,3 +530,71 @@ function cleanup() {
 // 페이지 언로드 시 정리
 window.addEventListener('beforeunload', cleanup);
 window.addEventListener('unload', cleanup);
+
+// TOC 활성 헤더 추적 함수 (tocbot 라이브러리 사용)
+function setupTOCActiveTracking() {
+    // 기존 핸들러 정리
+    if (tocScrollHandler) {
+        document.querySelector('.content').removeEventListener('scroll', tocScrollHandler);
+        tocScrollHandler = null;
+    }
+    
+    const headers = educationContent.querySelectorAll('h1, h2, h3, h4');
+    if (headers.length === 0) return;
+    
+    // tocbot이 로드되어 있는지 확인
+    if (typeof tocbot === 'undefined') {
+        console.log('tocbot 라이브러리가 로드되지 않았습니다.');
+        return;
+    }
+    
+    // 기존 tocbot 인스턴스 제거
+    if (window.tocbotInstance) {
+        tocbot.destroy();
+    }
+    
+    // tocbot 초기화
+    tocbot.init({
+        // TOC가 렌더링될 컨테이너
+        tocSelector: '.toc ul',
+        
+        // 스캔할 콘텐츠 영역
+        contentSelector: '.education-content',
+        
+        // 헤더 선택자
+        headingSelector: 'h1, h2, h3, h4',
+        
+        // 스크롤 가능한 컨테이너
+        scrollContainer: '.content',
+        
+        // 활성 클래스명
+        activeLinkClass: 'active',
+        
+        // 스크롤 시 헤더 오프셋 (상단 공백 줄어든 것에 맞춰 조정)
+        headingsOffset: 30, // 50 -> 30으로 줄임
+        
+        // 스크롤 매끄럽게 처리
+        scrollSmooth: true,
+        scrollSmoothDuration: 420,
+        
+        // 성능 최적화
+        throttleTimeout: 50,
+        
+        // TOC 링크 클릭 시 스크롤 오프셋
+        scrollSmoothOffset: -30, // -50 -> -30으로 조정
+        
+        // 기타 옵션
+        positionFixedSelector: null,
+        positionFixedClass: 'is-position-fixed',
+        fixedSidebarOffset: 'auto',
+        includeHtml: false,
+        
+        // 콜백 함수들
+        onClick: function(e) {
+            console.log('TOC 링크 클릭:', e.target.textContent);
+        }
+    });
+    
+    window.tocbotInstance = true;
+    console.log('tocbot으로 TOC 활성화 추적이 설정되었습니다.');
+}
