@@ -84,6 +84,7 @@
 /* 교육용 마크다운 스타일 조정 */
 .education-content {
     padding: 20px; /* 패딩 줄임 32px -> 20px */
+    position: relative;
 }
 
 /* 첫 번째 요소의 상단 마진 제거 */
@@ -95,6 +96,7 @@
     color: #0969da;
     border-bottom: 2px solid #0969da;
     margin-top: 0; /* 첫 번째 h1의 상단 마진 제거 */
+    position: relative;
 }
 
 .education-content h2 {
@@ -647,5 +649,82 @@
         width: 52px;
         height: 52px;
         border-radius: 14px;
+    }
+}
+
+/* URL 공유 버튼 스타일 - 컨텐츠 헤더 우측 위치 */
+.share-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #0969da;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    transition: all 0.2s ease;
+    display: none; /* 기본적으로 숨김 */
+}
+
+.share-button:hover {
+    background: #0860ca;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.share-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.share-button.visible {
+    display: block;
+}
+
+.share-button .icon {
+    margin-right: 4px;
+}
+
+/* 공유 성공 알림 - 상대적 위치로 변경 */
+.share-notification {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    background: #1a7f37;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    z-index: 101;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.share-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 반응형 디자인 - 모바일에서 공유 버튼 위치 조정 */
+@media (max-width: 768px) {
+    .share-button {
+        top: 15px;
+        right: 15px;
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+    
+    .share-notification {
+        top: 60px;
+        right: 15px;
+        font-size: 11px;
     }
 }

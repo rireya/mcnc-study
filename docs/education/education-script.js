@@ -44,14 +44,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // 교육 시스템 제목 클릭 이벤트 설정
     setupEducationTitleClick();
     
-    loadCoursesConfig().then(() => {
+    loadCoursesConfig().then(async () => {
         initializeSelectors();
         setupEventListeners();
         loadCoursesInSidebar();
         setupScrollToTop();
         
-        // 기본 과정 자동 선택 (설정에서 지정된 경우)
-        if (coursesConfig.settings.defaultCourse) {
+        // URL 쿼리 파라미터 우선 처리
+        const { course, material } = getQueryParams();
+        if (course || material) {
+            await loadFromQueryParams();
+        }
+        // 쿼리 파라미터가 없고 기본 과정이 설정된 경우
+        else if (coursesConfig.settings.defaultCourse) {
             courseSelect.value = coursesConfig.settings.defaultCourse;
             handleCourseChange();
         }
@@ -66,8 +71,18 @@ function setupEducationTitleClick() {
     const educationTitle = document.getElementById('education-title');
     if (educationTitle) {
         educationTitle.addEventListener('click', function() {
-            // GitHub Pages 기준 URL로 이동
-            window.location.href = '/mcnc-study/education/';
+            // UI 초기화
+            courseSelect.value = '';
+            daySelect.value = '';
+            daySelect.disabled = true;
+            daySelect.innerHTML = '<option value="">자료 선택</option>';
+            hideContent();
+            
+            // URL 쿼리 파라미터 제거
+            updateURLParams(null, null);
+            
+            // 히스토리 초기화
+            window.history.replaceState(null, '', window.location.pathname);
         });
     }
 }
@@ -143,16 +158,18 @@ function setupEventListeners() {
         if (event.state) {
             isHistoryUpdate = true;
             
-            const { courseId, dayFile } = event.state;
+            const { courseId, materialFile } = event.state;
             
             // UI 업데이트 (히스토리 추가 방지)
             if (courseId) {
                 courseSelect.value = courseId;
                 handleCourseChange().then(() => {
-                    if (dayFile) {
-                        daySelect.value = dayFile;
-                        loadContent(courseId, dayFile, false); // 히스토리 추가하지 않음
+                    if (materialFile) {
+                        daySelect.value = materialFile;
+                        loadContent(courseId, materialFile, false); // 히스토리 추가하지 않음
                     }
+                    // URL 쿼리 파라미터 업데이트
+                    updateURLParams(courseId, materialFile);
                     isHistoryUpdate = false;
                 });
             } else {
@@ -160,6 +177,8 @@ function setupEventListeners() {
                 courseSelect.value = '';
                 daySelect.value = '';
                 hideContent();
+                // URL 쿼리 파라미터 제거
+                updateURLParams(null, null);
                 isHistoryUpdate = false;
             }
             
@@ -224,11 +243,14 @@ async function handleCourseChange() {
     // 브라우저 히스토리 업데이트 (선택한 과정만)
     if (history.state && !isHistoryUpdate) {
         window.history.pushState(
-            { courseId: selectedCourse, dayFile: null },
+            { courseId: selectedCourse, materialFile: null },
             '',
             window.location.pathname
         );
     }
+    
+    // URL 쿼리 파라미터 업데이트
+    updateURLParams(selectedCourse, null);
 }
 
 // Day 파일 목록 로드 (설정 파일 기반)
@@ -272,9 +294,9 @@ function handleDayChange() {
 }
 
 // 콘텐츠 로드
-async function loadContent(courseId, dayFile, updateHistory = true) {
+async function loadContent(courseId, materialFile, updateHistory = true) {
     try {
-        const response = await fetch(`./${courseId}/${dayFile}`);
+        const response = await fetch(`./${courseId}/${materialFile}`);
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -283,8 +305,8 @@ async function loadContent(courseId, dayFile, updateHistory = true) {
         const html = md.render(markdown);
         
         showContent(html);
-        updateTOC();
         addCopyButtons();
+        updateTOC();
         
         // 코드 하이라이팅
         document.querySelectorAll('pre code').forEach((block) => {
@@ -297,11 +319,14 @@ async function loadContent(courseId, dayFile, updateHistory = true) {
         // 브라우저 히스토리 업데이트 (선택한 과정 및 자료)
         if (updateHistory && !isHistoryUpdate) {
             window.history.pushState(
-                { courseId, dayFile },
+                { courseId, materialFile },
                 '',
                 window.location.pathname
             );
         }
+        
+        // URL 쿼리 파라미터 업데이트
+        updateURLParams(courseId, materialFile);
         
     } catch (error) {
         console.error('콘텐츠 로드 실패:', error);
@@ -457,6 +482,7 @@ function updateTOC() {
             
             const li = document.createElement('li');
             const a = document.createElement('a');
+            
             a.textContent = header.textContent;
             a.href = `#${header.id}`;
             a.style.setProperty('--level', header.tagName.charAt(1) - 1);
@@ -643,6 +669,79 @@ function setupEducationContentLinks() {
             }
         }
     });
+}
+
+// URL 쿼리 파라미터 처리 함수들
+function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        course: params.get('course'),
+        material: params.get('material') // day → material로 변경
+    };
+}
+
+function updateURLParams(courseId, materialFile) {
+    const url = new URL(window.location);
+    if (courseId) {
+        url.searchParams.set('course', courseId);
+    } else {
+        url.searchParams.delete('course');
+    }
+    
+    if (materialFile) {
+        // .md 확장자 제거하여 저장
+        const materialName = materialFile.replace('.md', '');
+        url.searchParams.set('material', materialName);
+    } else {
+        url.searchParams.delete('material');
+    }
+    
+    // URL 변경 (페이지 새로고침 없이)
+    window.history.replaceState(null, '', url.toString());
+}
+
+async function loadFromQueryParams() {
+    const { course, material } = getQueryParams();
+    
+    if (course) {
+        // 과정이 존재하는지 확인
+        if (coursesConfig.courses[course]) {
+            courseSelect.value = course;
+            await handleCourseChange();
+            
+            if (material) {
+                // .md 확장자 추가하여 파일명 생성
+                const materialFile = material.endsWith('.md') ? material : material + '.md';
+                
+                // 자료가 존재하는지 확인
+                const materialFiles = await loadDayFiles(course);
+                const foundFile = materialFiles.find(file => file.filename === materialFile);
+                
+                if (foundFile) {
+                    daySelect.value = materialFile;
+                    await loadContent(course, materialFile, false); // 히스토리 업데이트 안함
+                } else {
+                    console.warn('지정된 자료를 찾을 수 없습니다:', material);
+                    showNotification(`자료 '${material}'를 찾을 수 없습니다.`, 'warning');
+                }
+            }
+        } else {
+            console.warn('지정된 과정을 찾을 수 없습니다:', course);
+            showNotification(`과정 '${course}'를 찾을 수 없습니다.`, 'warning');
+        }
+    }
+}
+
+// 브라우저 히스토리 초기 설정
+function setupInitialHistory() {
+    // 현재 상태가 없으면 초기 상태 설정
+    if (!window.history.state) {
+        window.history.replaceState(
+            { courseId: null, materialFile: null },
+            '',
+            window.location.pathname + window.location.search
+        );
+    }
 }
 
 // 메모리 정리 함수
