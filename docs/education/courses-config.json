@@ -14,6 +14,11 @@
           "filename": "day1.md",
           "title": "📚 Day 1 - SI 기초",
           "description": "SI 프로젝트 기초 이해"
+        },
+        {
+          "filename": "day2.md",
+          "title": "📚 Day 2 - Vue 3 기초",
+          "description": "Vue 3 환경 설정 및 기본 개념"
         }
       ]
     },
@@ -31,6 +36,18 @@
           "filename": "day1.md",
           "title": "📚 Day 1 - 환경 구축",
           "description": "개발 환경 설정 및 기본 구성"
+        }
+      ]
+    },
+    "@sample": {
+      "name": "이미지 샘플 가이드",
+      "description": "GitHub Pages 이미지 표시 방법 샘플",
+      "icon": "🖼️",
+      "files": [
+        {
+          "filename": "image-sample.md",
+          "title": "🖼️ 이미지 샘플 가이드",
+          "description": "GitHub Pages에서 이미지를 표시하는 방법 가이드"
         }
       ]
     }

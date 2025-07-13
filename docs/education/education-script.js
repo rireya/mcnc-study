@@ -14,6 +14,9 @@ const scrollToTopBtn = document.getElementById('scroll-to-top');
 let coursesConfig = null;
 let courses = {};
 
+// 메모리 관리용 변수들
+let configUpdateInterval = null;
+
 // Markdown-it 인스턴스 생성
 const md = window.markdownit({
     html: true,
@@ -98,14 +101,21 @@ function setupEventListeners() {
     courseSelect.addEventListener('change', handleCourseChange);
     daySelect.addEventListener('change', handleDayChange);
     
+    // 기존 타이머 정리
+    if (configUpdateInterval) {
+        clearInterval(configUpdateInterval);
+        configUpdateInterval = null;
+    }
+    
     // 설정 자동 새로고침 (개발 모드용)
     if (coursesConfig?.settings?.autoRefresh) {
-        setInterval(checkForConfigUpdates, 30000); // 30초마다 체크
+        configUpdateInterval = setInterval(checkForConfigUpdates, 30000); // 30초마다 체크
     }
 }
 
 // 사이드바에 교육 과정 로드
 function loadCoursesInSidebar() {
+    // 기존 내용 정리
     courseList.innerHTML = '';
     
     Object.keys(courses).forEach(courseId => {
@@ -114,7 +124,12 @@ function loadCoursesInSidebar() {
         const a = document.createElement('a');
         a.href = '#';
         a.innerHTML = `${course.icon || '📚'} ${course.name}`;
-        a.onclick = () => selectCourse(courseId);
+        
+        // onclick 대신 addEventListener 사용 (메모리 관리 개선)
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+            selectCourse(courseId);
+        });
         
         // 설명 표시 옵션
         if (coursesConfig?.settings?.showDescriptions && course.description) {
@@ -316,6 +331,8 @@ function selectCourse(courseId) {
 // TOC 업데이트
 function updateTOC() {
     const headers = educationContent.querySelectorAll('h1, h2, h3, h4');
+    
+    // 기존 TOC 정리 (이벤트 리스너도 함께 제거됨)
     toc.innerHTML = '';
     
     if (headers.length > 0) {
@@ -333,10 +350,14 @@ function updateTOC() {
             a.textContent = header.textContent;
             a.href = `#${header.id}`;
             a.style.setProperty('--level', header.tagName.charAt(1) - 1);
-            a.addEventListener('click', function(e) {
+            
+            // 이벤트 리스너를 함수로 분리하여 메모리 효율성 향상
+            const clickHandler = function(e) {
                 e.preventDefault();
                 header.scrollIntoView({ behavior: 'smooth' });
-            });
+            };
+            a.addEventListener('click', clickHandler);
+            
             li.appendChild(a);
             ul.appendChild(li);
         });
@@ -346,11 +367,20 @@ function updateTOC() {
 
 // 복사 버튼 추가
 function addCopyButtons() {
+    // 기존 복사 버튼들 제거 (중복 방지)
+    educationContent.querySelectorAll('.copy-button').forEach(btn => btn.remove());
+    
     educationContent.querySelectorAll('pre').forEach(pre => {
+        // 이미 버튼이 있는지 확인
+        if (pre.querySelector('.copy-button')) {
+            return;
+        }
+        
         const button = document.createElement('button');
         button.className = 'copy-button';
         button.textContent = 'Copy';
-        button.addEventListener('click', () => {
+        
+        const clickHandler = () => {
             const code = pre.querySelector('code').innerText;
             navigator.clipboard.writeText(code).then(() => {
                 button.textContent = 'Copied!';
@@ -360,7 +390,9 @@ function addCopyButtons() {
             }).catch(err => {
                 console.error('Error copying code: ', err);
             });
-        });
+        };
+        
+        button.addEventListener('click', clickHandler);
         pre.appendChild(button);
     });
 }
@@ -369,17 +401,25 @@ function addCopyButtons() {
 function setupScrollToTop() {
     const contentDiv = document.querySelector('.content');
     
+    // 기존 이벤트 리스너 제거 (중복 방지)
+    contentDiv.removeEventListener('scroll', handleScroll);
+    scrollToTopBtn.removeEventListener('click', scrollToTop);
+    
     // 스크롤 이벤트 리스너
-    contentDiv.addEventListener('scroll', function() {
-        if (contentDiv.scrollTop > 300) {
-            scrollToTopBtn.classList.add('visible');
-        } else {
-            scrollToTopBtn.classList.remove('visible');
-        }
-    });
+    contentDiv.addEventListener('scroll', handleScroll);
     
     // 버튼 클릭 이벤트
     scrollToTopBtn.addEventListener('click', scrollToTop);
+}
+
+// 스크롤 핸들러를 분리하여 재사용 가능하게 만듦
+function handleScroll() {
+    const contentDiv = document.querySelector('.content');
+    if (contentDiv.scrollTop > 300) {
+        scrollToTopBtn.classList.add('visible');
+    } else {
+        scrollToTopBtn.classList.remove('visible');
+    }
 }
 
 // 맨 위로 스크롤
@@ -403,7 +443,10 @@ function hideContent() {
     emptyState.style.display = 'block';
     educationContent.style.display = 'none';
     statusBar.classList.remove('active');
+    
+    // TOC와 교육 콘텐츠 정리 (메모리 해제)
     toc.innerHTML = '';
+    educationContent.innerHTML = '';
 }
 
 // 에러 표시
@@ -417,3 +460,32 @@ function showError(message) {
         </div>
     `;
 }
+
+// 메모리 정리 함수
+function cleanup() {
+    // 타이머 정리
+    if (configUpdateInterval) {
+        clearInterval(configUpdateInterval);
+        configUpdateInterval = null;
+    }
+    
+    // DOM 요소 정리
+    if (toc) toc.innerHTML = '';
+    if (educationContent) educationContent.innerHTML = '';
+    if (courseList) courseList.innerHTML = '';
+    
+    // 이벤트 리스너 정리
+    const contentDiv = document.querySelector('.content');
+    if (contentDiv) {
+        contentDiv.removeEventListener('scroll', handleScroll);
+    }
+    if (scrollToTopBtn) {
+        scrollToTopBtn.removeEventListener('click', scrollToTop);
+    }
+    
+    console.log('메모리 정리 완료');
+}
+
+// 페이지 언로드 시 정리
+window.addEventListener('beforeunload', cleanup);
+window.addEventListener('unload', cleanup);
