@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', function() {
         scrollToTopBtn.classList.remove('visible');
     }
     
+    // 교육 시스템 제목 클릭 이벤트 설정
+    setupEducationTitleClick();
+    
     loadCoursesConfig().then(() => {
         initializeSelectors();
         setupEventListeners();
@@ -51,6 +54,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// 교육 시스템 제목 클릭 이벤트 설정
+function setupEducationTitleClick() {
+    const educationTitle = document.getElementById('education-title');
+    if (educationTitle) {
+        educationTitle.addEventListener('click', function() {
+            // GitHub Pages 기준 URL로 이동
+            window.location.href = '/mcnc-study/education/';
+        });
+    }
+}
 
 // 교육 과정 설정 파일 로드
 async function loadCoursesConfig() {

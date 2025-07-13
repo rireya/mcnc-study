@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
   links.forEach(link => {
       link.addEventListener('click', function(e) {
+          // 교육 시스템 링크는 페이지 이동을 허용
+          if (link.classList.contains('education-link')) {
+              return; // 기본 동작(페이지 이동) 허용
+          }
+          
           e.preventDefault();
           links.forEach(link => link.classList.remove('active'));
           e.target.classList.add('active');

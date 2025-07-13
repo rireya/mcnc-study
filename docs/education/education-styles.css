@@ -1,5 +1,15 @@
 /* 교육자 전용 스타일 */
 
+/* 교육 시스템 제목 클릭 효과 제거 */
+#education-title {
+    transition: none;
+    user-select: none;
+}
+
+#education-title:active {
+    transform: none !important;
+}
+
 /* 사이드바 크기 조정 */
 .sidebar {
     width: 240px !important; /* 폭 최적화 280px -> 240px */
