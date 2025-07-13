@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCNC 교육 시스템</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="education-styles.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <!-- Highlight.js VS Code styles -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/vs.min.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h1>🎓 교육 시스템</h1>
+        <div class="sidebar-section">
+            <h2>교육 과정</h2>
+            <ul id="course-list">
+                <!-- 동적으로 생성됩니다 -->
+            </ul>
+        </div>
+        <hr class="sidebar-divider">
+        <div class="sidebar-section">
+            <h2>설정</h2>
+            <ul>
+                <li><a href="#" onclick="refreshConfig()" title="설정 파일 다시 로드">🔄 새로고침</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="content">
+        <div id="md-viewer">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="course-select">교육 과정:</label>
+                    <select id="course-select">
+                        <option value="">교육 과정을 선택하세요</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="day-select">교육 자료:</label>
+                    <select id="day-select" disabled>
+                        <option value="">먼저 교육 과정을 선택하세요</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="status-bar" id="status-bar">
+                <!-- 현재 선택된 교육 정보가 표시됩니다 -->
+            </div>
+            
+            <div class="content-area">
+                <div class="empty-state" id="empty-state">
+                    <h3>📚 교육 자료를 선택하세요</h3>
+                    <p>위의 드롭다운에서 교육 과정과 Day를 선택하면<br>해당 교육 자료가 여기에 표시됩니다.</p>
+                </div>
+                <div class="education-content" id="education-content" style="display: none;">
+                    <!-- 마크다운 내용이 여기에 표시됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toc" class="toc">
+        <!-- 목차가 여기에 표시됩니다 -->
+    </div>
+    
+    <!-- 맨 위로 가기 버튼 -->
+    <button id="scroll-to-top" class="scroll-to-top" title="맨 위로 가기">
+        ↑
+    </button>
+
+    <!-- Scripts -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.3.2/markdown-it.min.js"></script>
+    <script src="education-script.js"></script>
+</body>
+</html>

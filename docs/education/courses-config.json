@@ -1,0 +1,44 @@
+{
+  "courses": {
+    "si-junior": {
+      "name": "SI 신입 교육",
+      "description": "SI 프로젝트 신규 투입 개발자 교육",
+      "icon": "🏢",
+      "files": [
+        {
+          "filename": "README.md",
+          "title": "📋 교육 개요",
+          "description": "SI 신입 교육 전체 개요"
+        },
+        {
+          "filename": "day1.md",
+          "title": "📚 Day 1 - SI 기초",
+          "description": "SI 프로젝트 기초 이해"
+        }
+      ]
+    },
+    "bizmob4-setup": {
+      "name": "bizMOB4 셋업 교육",
+      "description": "bizMOB4 개발 환경 구축 교육",
+      "icon": "🛠️",
+      "files": [
+        {
+          "filename": "README.md",
+          "title": "📋 교육 개요",
+          "description": "bizMOB4 셋업 교육 전체 개요"
+        },
+        {
+          "filename": "day1.md",
+          "title": "📚 Day 1 - 환경 구축",
+          "description": "개발 환경 설정 및 기본 구성"
+        }
+      ]
+    }
+  },
+  "settings": {
+    "autoRefresh": true,
+    "showDescriptions": true,
+    "defaultCourse": null,
+    "theme": "default"
+  }
+}
