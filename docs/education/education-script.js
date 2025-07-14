@@ -142,6 +142,9 @@ function setupEventListeners() {
   
   // 브라우저 뒤로가기/앞으로가기 처리
   window.addEventListener('popstate', function(event) {
+    console.log('popstate 이벤트 발생:', event.state);
+    
+    // event.state가 있으면 그걸 사용하고, 없으면 URL에서 직접 읽기
     if (event.state) {
       isHistoryUpdate = true;
       
@@ -168,9 +171,15 @@ function setupEventListeners() {
         updateURLParams(null, null);
         isHistoryUpdate = false;
       }
-      
-      console.log('브라우저 뒤로가기/앞으로가기:', event.state);
+    } else {
+      // event.state가 없는 경우 URL에서 직접 쿼리 파라미터 읽기
+      isHistoryUpdate = true;
+      loadFromQueryParams().then(() => {
+        isHistoryUpdate = false;
+      });
     }
+    
+    console.log('브라우저 뒤로가기/앞으로가기 처리 완료');
   });
 }
 
@@ -644,6 +653,8 @@ function updateURLParams(courseId, materialFile) {
 async function loadFromQueryParams() {
   const { course, material } = getQueryParams();
   
+  console.log('loadFromQueryParams 호출:', { course, material });
+  
   if (course) {
     // 과정이 존재하는지 확인
     if (coursesConfig.courses[course]) {
@@ -670,6 +681,14 @@ async function loadFromQueryParams() {
       console.warn('지정된 과정을 찾을 수 없습니다:', course);
       showNotification(`과정 '${course}'를 찾을 수 없습니다.`, 'warning');
     }
+  } else {
+    // course가 없는 경우 초기 상태로 설정
+    console.log('쿼리 파라미터가 없음 - 초기 상태로 설정');
+    courseSelect.value = '';
+    daySelect.value = '';
+    daySelect.disabled = true;
+    daySelect.innerHTML = '<option value="">자료 선택</option>';
+    hideContent();
   }
 }
 
