@@ -36,31 +36,31 @@
           "description": "실무에서 자주 발생하는 문제와 해결 방법"
         },
         {
-          "filename": "ai-tools-guide.md",
-          "title": "🤖 AI 도구 활용 가이드",
-          "description": "개발 생산성을 높이는 AI 도구 활용법"
-        },
-        {
           "filename": "terms-dictionary.md",
           "title": "📖 용어 사전",
           "description": "SI 프로젝트 필수 용어 정리"
         }
       ]
     },
-    "bizmob4-setup": {
-      "name": "bizMOB4 셋업 교육",
-      "description": "bizMOB4 개발 환경 구축 교육",
-      "icon": "🛠️",
+    "ai-tools": {
+      "name": "AI 개발 도구 교육",
+      "description": "AI 도구를 활용한 효율적인 개발 능력 향상 교육",
+      "icon": "🤖",
       "files": [
         {
           "filename": "README.md",
           "title": "📋 교육 개요",
-          "description": "bizMOB4 셋업 교육 전체 개요"
+          "description": "AI 개발 도구 교육 전체 개요 및 커리큘럼"
         },
         {
-          "filename": "day1.md",
-          "title": "📚 Day 1 - 환경 구축",
-          "description": "개발 환경 설정 및 기본 구성"
+          "filename": "foundation.md",
+          "title": "📚 기초 과정 - AI 도구 활용 기초",
+          "description": "AI 네이티브 마인드셋, 주요 도구 소개, 워크플로우 통합"
+        },
+        {
+          "filename": "advanced.md",
+          "title": "🚀 심화 과정 - AI 도구 고급 활용",
+          "description": "프롬프트 엔지니어링, 한계 인식, 비용 최적화, 트러블슈팅"
         }
       ]
     },
