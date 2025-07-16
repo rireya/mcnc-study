@@ -904,9 +904,7 @@ git status
 ```markdown
 | 프로젝트 | 고객 | 기간 | 담당업무 | 기술스택 |
 |:-|:-|:-|:-|:-|
-| NS 차세대 M-SFA | 농심 | 22.08~23.02 | Mobile FE | jQuery |
-| HD현대 DXP 구축 | HD현대 | 23.05~24.04 | Mobile FE | Vue 3 |
-| HD현대 DXP 2차 | HD현대 | 24.07~25.01 | Mobile FE | Vue 3 |
+| {프로젝트명} | {고객사} | {기간} | {담당업무} | Vue.js |
 ```
 
 ### 🔧 실무 팁
@@ -923,6 +921,8 @@ git status
 - 구체적인 수치 포함 (성능 개선 %)
 - Before/After 비교
 - 핵심 배운 점 위주
+```
+
 ---
 
 ## 🔧 개발자 도구와 디버깅
@@ -930,6 +930,7 @@ git status
 ### 🌐 브라우저 개발자 도구 활용
 
 #### Console 활용법
+
 ```javascript
 // ✅ 단계별 디버깅
 console.log('함수 시작:', functionName);
@@ -1006,6 +1007,8 @@ async function fetchAndProcessData() {
 
 ### 🏗️ Mock 데이터 활용
 
+> **💡 핵심 원칙**: Mock 데이터도 실제 API와 동일한 **비동기 형식**으로 구현해야 실제 API 연동 시 버그가 덜 발생합니다.
+
 #### 간단한 Mock API
 
 ```javascript
@@ -1016,16 +1019,48 @@ export const mockUsers = [
   { id: 3, name: '박백엔드', role: 'user' }
 ];
 
-// API 함수에서 Mock 데이터 사용
+// ✅ 비동기 Mock API (권장)
 async function fetchUsers() {
   if (process.env.NODE_ENV === 'development') {
-    // 개발 환경에서는 Mock 데이터 사용
-    return Promise.resolve(mockUsers);
+    // 실제 API 지연시간 시뮬레이션 (100-500ms)
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // 가끔 에러 시뮬레이션 (테스트용)
+    if (Math.random() < 0.1) {
+      throw new Error('네트워크 오류 시뮬레이션');
+    }
+
+    return mockUsers;
   } else {
     // 운영 환경에서는 실제 API 호출
     return fetch('/api/users').then(res => res.json());
   }
 }
+
+// ❌ 동기 Mock (피해야 할 방식)
+function fetchUsersSyncBad() {
+  return mockUsers; // 실제 API는 비동기인데 Mock은 동기 → 버그 위험
+}
+```
+
+#### 비동기 Mock의 장점
+
+```javascript
+// ✅ 실제 API와 동일한 패턴으로 컴포넌트 작성 가능
+async function loadUserData() {
+  try {
+    setLoading(true);
+    const users = await fetchUsers(); // Mock이든 실제 API든 동일한 방식
+    setUsers(users);
+  } catch (error) {
+    console.error('사용자 데이터 로드 실패:', error);
+    setError(error.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+// 로딩 상태, 에러 처리 등을 Mock 단계에서부터 테스트 가능
 ```
 
 #### localStorage를 활용한 임시 데이터
