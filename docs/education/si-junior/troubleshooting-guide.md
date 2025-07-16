@@ -206,7 +206,7 @@ let initialHeight = window.innerHeight;
 window.addEventListener('resize', function() {
   let currentHeight = window.innerHeight;
   let heightDiff = initialHeight - currentHeight;
-  
+
   if (heightDiff > 150) {
     // 키보드가 올라온 상태
     document.body.classList.add('keyboard-open');
@@ -285,24 +285,24 @@ fetch('/api/users')
 async function fetchUsers() {
   try {
     const response = await fetch('/api/users');
-    
+
     // HTTP 상태 코드 확인
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     // 데이터 유효성 검사
     if (!data || !Array.isArray(data.users)) {
       throw new Error('Invalid data format');
     }
-    
+
     return data;
-    
+
   } catch (error) {
     console.error('API 호출 실패:', error);
-    
+
     // 사용자에게 친화적인 에러 메시지
     if (error.message.includes('network')) {
       showErrorMessage('네트워크 연결을 확인해주세요.');
@@ -311,7 +311,7 @@ async function fetchUsers() {
     } else {
       showErrorMessage('일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
     }
-    
+
     return null;
   }
 }
@@ -469,7 +469,7 @@ export default {
       error: null
     }
   },
-  
+
   // 개발 중에만 디버깅 정보 노출
   mounted() {
     if (process.env.NODE_ENV === 'development') {
@@ -477,16 +477,16 @@ export default {
       console.log('UserList component mounted:', this);
     }
   },
-  
+
   // 에러 경계 설정
   errorCaptured(error, instance, info) {
     console.error('Vue Error:', error);
     console.error('Component:', instance);
     console.error('Info:', info);
-    
+
     // 에러 로깅 서비스로 전송
     this.logError(error, info);
-    
+
     return false; // 에러 전파 중단
   }
 }
@@ -586,20 +586,20 @@ if (process.env.DISABLE_FEATURE === 'true') {
 1. 상황 설명
    - 무엇을 하려고 했는지
    - 어떤 문제가 발생했는지
-   
+
 2. 시도한 것들
    - 어떤 방법들을 시도했는지
    - 각각의 결과는 어땠는지
-   
+
 3. 환경 정보
    - 브라우저 종류/버전
    - 운영체제
    - 관련 라이브러리 버전
-   
+
 4. 에러 메시지 (있다면)
    - 전체 에러 스택
    - 콘솔 로그
-   
+
 5. 예상 결과
    - 어떻게 동작하기를 원하는지
 ```
@@ -658,5 +658,4 @@ if (process.env.DISABLE_FEATURE === 'true') {
 
 **💡 기억하세요!**
 
-**"문제가 발생했을 때 당황하지 말고 체계적으로 접근하면**  
-**대부분의 문제는 해결할 수 있습니다!"**
+**문제가 발생했을 때 당황하지 말고 체계적으로 접근하면 대부분의 문제는 해결할 수 있습니다!**

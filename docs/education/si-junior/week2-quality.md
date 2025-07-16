@@ -14,7 +14,7 @@
 
 ### 🎯 핵심 원칙
 
-> **"너무 어렵게 짜지 마라"**  
+> **"너무 어렵게 짜지 마라"**
 > 기능 구현뿐만 아니라 코드 관리 측면도 생각해야 함
 
 ### 🏗️ 코드 복잡도 관리
@@ -40,11 +40,11 @@ function processUserData(users) {
 // ✅ 개선된 코드 (조기 리턴 활용)
 function processUserData(users) {
   if (!users || users.length === 0) return;
-  
+
   for (let user of users) {
     if (!user.isActive) continue;
     if (!user.permissions) continue;
-    
+
     if (user.permissions.includes('admin')) {
       // 깔끔한 로직
       processAdminUser(user);
@@ -70,7 +70,7 @@ function handleLogin(email, password) {
   if (!validateLoginForm(email, password)) {
     return showValidationError();
   }
-  
+
   try {
     const response = await callLoginAPI(email, password);
     return processLoginResponse(response);
@@ -155,16 +155,16 @@ setTimeout(retry, RETRY_DELAY_MS);
 
 ```html
 <!-- ✅ 접근성 고려 -->
-<button 
-  type="button" 
+<button
+  type="button"
   aria-label="메뉴 열기"
   onclick="toggleMenu()">
   ☰
 </button>
 
-<input 
-  type="email" 
-  id="email" 
+<input
+  type="email"
+  id="email"
   required
   aria-describedby="email-error">
 <label for="email">이메일</label>
@@ -257,7 +257,7 @@ fetch('/api/users/1', {
 async function apiCall() {
   try {
     const response = await fetch('/api/data');
-    
+
     if (response.status === 200) {
       // 성공
       return await response.json();
@@ -291,11 +291,11 @@ async function fetchUserData() {
   try {
     const response = await fetch('/api/user');
     const userData = await response.json();
-    
+
     // 추가 데이터 필요시 순차적 호출
     const profileResponse = await fetch(`/api/profile/${userData.id}`);
     const profileData = await profileResponse.json();
-    
+
     return { ...userData, profile: profileData };
   } catch (error) {
     console.error('사용자 데이터 조회 실패:', error);
@@ -311,7 +311,7 @@ async function fetchDashboardData() {
       fetch('/api/posts').then(r => r.json()),
       fetch('/api/comments').then(r => r.json())
     ]);
-    
+
     return { users, posts, comments };
   } catch (error) {
     console.error('대시보드 데이터 조회 실패:', error);
@@ -335,12 +335,12 @@ function getUserDisplayName(user) {
   if (!user) {
     return '익명 사용자';
   }
-  
+
   // 2단계: 속성 존재 확인
   if (user.name) {
     return user.name;
   }
-  
+
   // 3단계: 대안값 제공
   return user.email || user.id || '사용자';
 }
@@ -360,12 +360,12 @@ function processUserList(users) {
     console.warn('users가 배열이 아닙니다:', typeof users);
     return [];
   }
-  
+
   // 빈 배열 처리
   if (users.length === 0) {
     return [];
   }
-  
+
   return users
     .filter(user => user && user.id) // null/undefined 제거
     .map(user => ({
@@ -390,12 +390,12 @@ function validateAge(age) {
   // - 0
   // - 최대값 (150)
   // - 소수점 (25.5)
-  
+
   if (age == null) return false;
-  
+
   const numAge = Number(age);
   if (isNaN(numAge)) return false;
-  
+
   return numAge >= 0 && numAge <= 150;
 }
 
@@ -416,20 +416,20 @@ async function saveUserData(userData) {
     if (!userData || !userData.email) {
       throw new Error('이메일은 필수입니다.');
     }
-    
+
     // 2. API 호출
     const response = await fetch('/api/users', {
       method: 'POST',
       body: JSON.stringify(userData)
     });
-    
+
     // 3. 응답 상태 확인
     if (!response.ok) {
       throw new Error(`서버 오류: ${response.status}`);
     }
-    
+
     return await response.json();
-    
+
   } catch (error) {
     // 4. 에러 로깅 및 사용자 알림
     console.error('사용자 저장 실패:', error);
@@ -470,7 +470,7 @@ const rest = users.slice(1);
   -moz-transform: translateX(100px);
   -ms-transform: translateX(100px);
   transform: translateX(100px);
-  
+
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -595,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var activeUsers = users.filter(function(user) {
         return ['active', 'premium'].includes(user.status);
       });
-      
+
       // Object.assign 사용 (폴리필로 IE 지원)
       var processedUsers = activeUsers.map(function(user) {
         return Object.assign({}, user, {
@@ -603,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function() {
           isVip: user.status === 'premium'
         });
       });
-      
+
       displayUsers(processedUsers);
     })
     .catch(function(error) {
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ### 📚 jQuery 필요성
 
-> **jQuery는 어느 정도는 알아두는 걸 추천**  
+> **jQuery는 어느 정도는 알아두는 걸 추천**
 > (기존 앱 유지보수 및 bizMOB3.5 프로젝트 투입 시 필요)
 
 #### 기본 선택자와 이벤트
@@ -630,16 +630,16 @@ $(document).ready(function() {
   $('#loginBtn').click(function() {
     const email = $('#email').val();
     const password = $('#password').val();
-    
+
     // 유효성 검사
     if (!email || !password) {
       alert('이메일과 비밀번호를 입력하세요.');
       return;
     }
-    
+
     // 로딩 상태 표시
     $(this).prop('disabled', true).text('로그인 중...');
-    
+
     // Ajax 호출
     $.ajax({
       url: '/api/login',
@@ -705,7 +705,7 @@ document.getElementById('myButton').addEventListener('click', function() {
 
 ### 🎯 Ionic 컴포넌트란?
 
-> **"모바일 네이티브 UX를 웹에서 구현하는 컴포넌트 라이브러리"**  
+> **"모바일 네이티브 UX를 웹에서 구현하는 컴포넌트 라이브러리"**
 > **"기존 Vue 프로젝트에 모바일 친화적 UI를 쉽게 추가하는 도구"**
 
 #### **핵심 개념**
@@ -767,7 +767,7 @@ document.getElementById('myButton').addEventListener('click', function() {
     <header class="page-header">
       <h1>사용자 관리</h1>
     </header>
-    
+
     <!-- Ionic 컴포넌트 활용 영역 -->
     <ion-content class="main-content">
       <ion-list>
@@ -784,7 +784,7 @@ document.getElementById('myButton').addEventListener('click', function() {
           </ion-badge>
         </ion-item>
       </ion-list>
-      
+
       <!-- 모바일 친화적 버튼 -->
       <ion-button expand="block" @click="addUser">
         사용자 추가
@@ -794,9 +794,9 @@ document.getElementById('myButton').addEventListener('click', function() {
 </template>
 
 <script setup lang="ts">
-import { 
-  IonContent, IonList, IonItem, IonLabel, 
-  IonAvatar, IonBadge, IonButton 
+import {
+  IonContent, IonList, IonItem, IonLabel,
+  IonAvatar, IonBadge, IonButton
 } from '@ionic/vue';
 
 const users = ref([
@@ -831,5 +831,6 @@ const addUser = () => {
 
 ---
 
-**📧 질문이 있으시면 언제든 연락주세요!**  
+**📧 질문이 있으시면 언제든 연락주세요!**
+
 **프로젝트수행팀 최명훈 (<mhchoi@mcnc.co.kr>)**

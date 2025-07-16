@@ -1152,9 +1152,9 @@ window.testUtils = {
 
 ### 🔗 학습 링크
 
-- [Git 기초 가이드](https://git-scm.com/book/ko/v2)
-- [JavaScript 스타일 가이드](https://github.com/airbnb/javascript)
-- [브라우저 개발자 도구 가이드](https://developer.mozilla.org/ko/docs/Learn/Common_questions/What_are_browser_developer_tools)
+- <a href="https://git-scm.com/book/ko/v2" target="_blank">Git 기초 가이드</a>
+- <a href="https://github.com/airbnb/javascript" target="_blank">JavaScript 스타일 가이드</a>
+- <a href="https://developer.chrome.com/docs/devtools/overview?hl=ko" target="_blank">Chrome 개발자 도구 가이드</a>
 
 ### 💡 추천 도구
 
@@ -1165,4 +1165,5 @@ window.testUtils = {
 ---
 
 **📧 질문이 있으시면 언제든 연락주세요!**
+
 **프로젝트수행팀 최명훈 (<mhchoi@mcnc.co.kr>)**
