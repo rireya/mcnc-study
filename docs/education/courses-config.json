@@ -69,6 +69,28 @@
         }
       ]
     },
+    "fe-setup": {
+      "name": "FE 클라이언트 셋업 교육",
+      "description": "bizMOB4 기반 프론트엔드 개발자를 위한 실무 중심 교육 과정",
+      "icon": "💻",
+      "files": [
+        {
+          "filename": "README.md",
+          "title": "📚 교육 개요",
+          "description": "FE 클라이언트 셋업 교육 전체 개요"
+        },
+        {
+          "filename": "session1-overview-config.md",
+          "title": "📱 1차: bizMOB4 개요 및 config",
+          "description": "bizMOB 진화 과정, 기술 선택 배경, 핵심 설정 파일"
+        },
+        {
+          "filename": "session2-architecture-design.md",
+          "title": "🏗️ 2차: 아키텍처 설계시 주의점",
+          "description": "폴더 구조 설계, SI 프로젝트 전략, 프로젝트 안정화"
+        }
+      ]
+    },
     "@sample": {
       "name": "이미지 샘플 가이드",
       "description": "GitHub Pages 이미지 표시 방법 샘플",
