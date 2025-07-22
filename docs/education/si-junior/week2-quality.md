@@ -1864,6 +1864,7 @@ class TokenManager {
   constructor() {
     this.accessToken = localStorage.getItem('access_token');
     this.refreshToken = localStorage.getItem('refresh_token');
+    // ⚠️ 클라이언트의 만료 시간은 "힌트"일 뿐, 보안 검증 아님 (만료 시간 체크는 서버에서 추가로 필요)
     this.expiresAt = localStorage.getItem('token_expires_at');
     this.isRefreshing = false;
     this.failedQueue = [];
