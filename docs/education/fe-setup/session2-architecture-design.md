@@ -20,9 +20,9 @@
 ```text
 📈 개발 규모에 따른 구조 변화:
 
-초기 (소규모) → 중기 (중규모) → 후기 (대규모)
+   소규모    →    중규모     →   대규모
      ↓              ↓              ↓
-  단순 구조     →  모듈화 구조   →  세분화 구조
+  단순 구조  →  모듈화 구조  →  세분화 구조
 
 ⚠️ 주의점: 처음부터 과도한 구조화는 오히려 독이 될 수 있음
 ```
@@ -43,51 +43,7 @@
 • 하나 수정 시 여러 파일 확인 필요
 ```
 
-### 🏢 권장 폴더 구조
-
-#### **bizMOB4 표준 구조**
-
-```text
-src/
-├── 📁 views/              # 페이지 컴포넌트
-│   ├── auth/             # 인증 관련 페이지
-│   ├── dashboard/        # 대시보드
-│   └── settings/         # 설정 페이지
-├── 📁 components/         # 재사용 컴포넌트
-│   ├── common/           # 공통 컴포넌트
-│   ├── forms/            # 폼 관련 컴포넌트
-│   └── layouts/          # 레이아웃 컴포넌트
-├── 📁 composables/        # Vue 3 Composition API
-│   ├── useAuth.ts        # 인증 로직
-│   ├── useApi.ts         # API 호출 로직
-│   └── useBizmob.ts      # bizMOB 브릿지 로직
-├── 📁 stores/             # Pinia 상태 관리
-│   ├── auth.ts           # 인증 상태
-│   ├── app.ts            # 앱 전역 상태
-│   └── user.ts           # 사용자 상태
-├── 📁 router/             # Vue Router 설정
-│   ├── index.ts          # 라우터 메인 설정
-│   └── guards.ts         # 네비게이션 가드
-├── 📁 api/                # API 관련
-│   ├── client.ts         # HTTP 클라이언트 설정
-│   ├── endpoints.ts      # API 엔드포인트 정의
-│   └── types.ts          # API 타입 정의
-├── 📁 utils/              # 유틸리티 함수
-│   ├── format.ts         # 포맷팅 함수
-│   ├── validation.ts     # 검증 함수
-│   └── helpers.ts        # 헬퍼 함수
-├── 📁 assets/             # 정적 자원
-│   ├── images/           # 이미지 파일
-│   ├── icons/            # 아이콘 파일
-│   └── styles/           # 스타일 파일
-│       ├── variables.css # CSS 변수
-│       └── global.css    # 전역 스타일
-├── 📁 types/              # TypeScript 타입 정의
-│   ├── api.ts            # API 관련 타입
-│   ├── bizmob.ts         # bizMOB 관련 타입
-│   └── common.ts         # 공통 타입
-└── 📄 main.ts             # 앱 진입점
-```
+### 🏢 폴더 구조
 
 #### **폴더별 역할과 책임**
 
@@ -104,20 +60,96 @@ src/
 • Props/Emit 기반 통신
 • 순수 프레젠테이션 로직
 
-📁 composables/
+📁 composables/ (Vue 전용 로직)
 • Vue 3 Composition API 활용
-• 재사용 가능한 로직 분리
-• 상태와 로직의 캡슐화
+• 반응형 상태를 포함한 로직
+• 컴포넌트 생명주기 관련 로직
+• Vue 인스턴스에 의존적인 기능
 
 📁 stores/
 • 전역 상태 관리 (Pinia)
 • 컴포넌트 간 데이터 공유
 • 복잡한 상태 로직 중앙 관리
 
-📁 utils/
+📁 utils/ (범용 로직)
 • 순수 함수형 유틸리티
 • 프레임워크 독립적 로직
+• 입력값 → 출력값 변환 함수
 • 테스트 용이한 헬퍼 함수
+```
+
+#### **📂 composables vs utils 구분 가이드**
+
+```text
+🔍 둘 다 재사용 가능한 로직이지만 성격이 다름:
+
+📁 composables (Vue 컴포넌트와 결합)
+✅ Vue 반응형 시스템 사용 (ref, reactive, computed)
+✅ 컴포넌트 생명주기 훅 사용 (onMounted, onUnmounted)
+✅ 컴포넌트 인스턴스 접근 (getCurrentInstance)
+✅ 상태를 가지고 있는 로직
+✅ 컴포넌트 간 로직 공유가 목적
+
+예시:
+• useAuth() - 로그인 상태 관리
+• useApi() - API 호출과 로딩 상태
+• useModal() - 모달 열기/닫기 상태
+• usePagination() - 페이징 상태 관리
+
+📁 utils (독립적인 도구 함수)
+✅ 입력 → 출력만 있는 순수 함수
+✅ Vue/React/Angular 등 어디서든 사용 가능
+✅ 상태를 가지지 않음 (stateless)
+✅ 부작용(side effect) 없음
+✅ 데이터 변환/검증이 목적
+
+예시:
+• formatDate() - 날짜 포맷팅
+• validateEmail() - 이메일 검증
+• debounce() - 디바운스 처리
+• generateId() - 고유 ID 생성
+```
+
+#### **실제 코드 예시로 보는 차이점**
+
+```typescript
+// ❌ 잘못된 분류 예시
+// utils/useAuth.ts (X) - Vue 반응형 시스템 사용하므로 composables에 위치해야 함
+export function useAuth() {
+  const user = ref(null)
+  const isLoggedIn = computed(() => !!user.value)
+
+  const login = async (credentials) => {
+    // 로그인 로직
+  }
+
+  return { user, isLoggedIn, login }
+}
+
+// composables/formatDate.ts (X) - 순수 함수이므로 utils에 위치해야 함
+export function formatDate(date: Date): string {
+  return date.toISOString().split('T')[0]
+}
+```
+
+#### **📋 분류 기준 체크리스트**
+
+```text
+🤔 어느 폴더에 넣을지 고민될 때 체크:
+
+composables/ 폴더에 넣어야 하는 경우:
+□ ref, reactive, computed 등 Vue 반응형 API 사용
+□ onMounted, onUnmounted 등 생명주기 훅 사용
+□ 컴포넌트와 상호작용하는 상태 관리
+□ 컴포넌트 간 로직 공유가 목적
+□ 'use'로 시작하는 함수명 (컨벤션)
+
+utils/ 폴더에 넣어야 하는 경우:
+□ 입력값을 받아 결과값만 반환하는 순수 함수
+□ Vue 없이도 Node.js, 바닐라 JS에서 동작 가능
+□ 상태를 가지지 않음 (stateless)
+□ 부작용(API 호출, DOM 조작 등) 없음
+□ 데이터 변환, 계산, 검증 등이 목적
 ```
 
 ---
@@ -129,11 +161,11 @@ src/
 #### **개발 단계별 FE 작업량**
 
 ```text
-📈 SI 프로젝트 개발 흐름:
+📈 SI 프로젝트 개발 흐름 (이슈가 없는 경우):
 
-요구사항 분석 → 설계 → 개발 → 테스트 → 배포
-     ↓           ↓      ↓       ↓      ↓
-   FE 작업:    낮음   낮음    높음    중간   낮음
+          분석  →  설계  →  개발  →  테스트  →  배포  →  안정화
+           ↓        ↓        ↓        ↓         ↓         ↓
+FE 작업:  낮음     낮음     높음      중간      중간      낮음
 
 ⚠️ 초기 한가한 시간을 잘못 활용하면 후반부에 큰 문제 발생
 ```
@@ -148,20 +180,27 @@ src/
    • 코딩 컨벤션 정립
    • 빌드 프로세스 구성
 
-2. 라이브러리 검증 및 테스트
+2. 프로젝트 설정 확인 및 환경 맞춤 설정
+   • vite.config.ts 프로젝트 요구사항에 맞게 조정
+   • tsconfig.json 컴파일 옵션 최적화
+   • package.json 스크립트 및 의존성 정리
+   • 환경 변수 설정 (.env 파일 구성)
+
+3. 라이브러리 검증 및 테스트
    • 필요 라이브러리 목록 작성
    • 버전 호환성 검증
    • 테스트용 샘플 화면 제작
 
-3. 개발 환경 최적화
+4. 개발 환경 최적화
    • IDE 설정 표준화
    • 코드 스니펫 작성
    • 자동화 스크립트 구성
 
-4. 문서화 작업
-   • README.md 작성
-   • API 문서 템플릿 준비
-   • 개발 가이드 작성
+5. 공통 기능 구현
+   • 유틸리티 함수 라이브러리 구축
+   • 공통 컴포넌트 개발 (로딩, 에러 처리 등)
+   • API 통신 서비스 구현
+   • 사용자 경험 향상 컴포넌트 (페이징, 레이지로딩 등)
 ```
 
 ### 🧪 라이브러리 사전 검증
@@ -175,25 +214,21 @@ src/
 □ iOS Safari 지원 여부
 □ Android WebView 지원 여부
 □ 터치 이벤트 처리 능력
-□ 반응형 디자인 지원
 
 🔄 버전 호환성
 □ Vue 3 호환성
 □ TypeScript 지원
-□ Vite 빌드 도구 호환성
-□ 최소 앱 지원 버전과의 호환성
+□ 최소 앱 지원 버전과의 호환성 (ES5 지원 여부)
 
 📚 생태계 건강성
 □ 활발한 커뮤니티
 □ 정기적인 업데이트
 □ 충분한 문서화
-□ 이슈 대응 속도
 
 🛡️ 보안 및 안정성
 □ 보안 취약점 이력
 □ 라이선스 정책
 □ 번들 사이즈 영향
-□ 트리 셰이킹 지원
 ```
 
 #### **테스트용 샘플 화면 제작**
@@ -233,134 +268,97 @@ src/
 
 ## ⚙️ 핵심 설정 파일 심화
 
-### 📝 vite.config.js 최적화
+### 📝 vite.config.ts 주요 설정 항목
 
 #### **프로젝트별 설정 고려사항**
 
-```javascript
-// vite.config.js 고급 설정 예시
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+```text
+🎯 vite.config.ts 핵심 설정 영역:
 
-export default defineConfig({
-  plugins: [
-    vue(),
-    // 환경별 플러그인 설정
-  ],
+📁 경로 별칭 (resolve.alias)
+• @/ → src/ 폴더 매핑
+• @components/, @views/, @utils/ 등 주요 폴더 별칭
+• 상대 경로 대신 절대 경로 사용으로 가독성 향상
+• import 문 간소화 및 리팩토링 용이성
 
-  // 경로 별칭 설정
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-      '@components': resolve(__dirname, 'src/components'),
-      '@views': resolve(__dirname, 'src/views'),
-      '@utils': resolve(__dirname, 'src/utils'),
-      '@stores': resolve(__dirname, 'src/stores'),
-      '@composables': resolve(__dirname, 'src/composables')
-    }
-  },
+🔌 플러그인 설정 (plugins)
+• @vitejs/plugin-vue: Vue SFC 지원
+• @vitejs/plugin-vue-jsx: JSX 문법 지원
+• vite-plugin-eslint: 빌드 시 ESLint 검사
+• 환경별 플러그인 조건부 적용
 
-  // 빌드 최적화
-  build: {
-    target: 'es2015',
-    rollupOptions: {
-      output: {
-        // 청크 분할 전략
-        manualChunks: {
-          'vendor': ['vue', 'vue-router', 'pinia'],
-          'ionic': ['@ionic/vue'],
-          'utils': ['lodash', 'moment']
-        }
-      }
-    },
-    // 소스맵 설정 (개발/운영 환경별)
-    sourcemap: process.env.NODE_ENV === 'development'
-  },
+🏗️ 빌드 최적화 (build)
+• target: 지원 브라우저 범위 설정 (es2015, es2020 등)
+• rollupOptions: 번들링 세부 설정
+• manualChunks: 청크 분할 전략 (vendor, 라이브러리별)
+• sourcemap: 소스맵 생성 여부 (개발/운영 환경별)
 
-  // 개발 서버 설정
-  server: {
-    port: 3000,
-    proxy: {
-      '/bizmob-api': {
-        target: 'http://dev.bizmob.com:8080',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/bizmob-api/, '/api')
-      }
-    }
-  },
+🌐 개발 서버 (server)
+• port: 개발 서버 포트 설정
+• proxy: API 프록시 설정 (CORS 해결)
+• host: 외부 접속 허용 설정
+• https: HTTPS 개발 서버 설정
 
-  // CSS 전처리기 설정
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "@/assets/styles/variables.scss";`
-      }
-    }
-  }
-})
+🎨 CSS 전처리기 (css)
+• preprocessorOptions: SCSS, Less 등 전처리기 설정
+• additionalData: 전역 변수/믹스인 자동 import
+• modules: CSS 모듈 설정
+• postcss: PostCSS 플러그인 설정
+
+📦 의존성 최적화 (optimizeDeps)
+• include: 사전 번들링할 의존성 지정
+• exclude: 사전 번들링에서 제외할 의존성
+• force: 의존성 캐시 강제 재생성
 ```
 
-### 🔧 tsconfig.json 최적화
+### 🔧 tsconfig.json 주요 설정 항목
 
 #### **TypeScript 설정 상세화**
 
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "allowImportingTsExtensions": false,
-    "strict": true,
-    "jsx": "preserve",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": true,
-    "skipLibCheck": true,
+```text
+🎯 tsconfig.json 핵심 설정 영역:
 
-    // 경로 매핑 (vite.config.js와 동일하게)
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@views/*": ["src/views/*"],
-      "@utils/*": ["src/utils/*"],
-      "@stores/*": ["src/stores/*"],
-      "@composables/*": ["src/composables/*"]
-    },
+🎯 컴파일러 옵션 (compilerOptions)
+• target: 컴파일 대상 ECMAScript 버전
+• module: 모듈 시스템 (ESNext, CommonJS 등)
+• moduleResolution: 모듈 해석 방식 (node, bundler)
+• strict: 엄격한 타입 검사 활성화
 
-    // 타입 정의
-    "types": [
-      "vite/client",
-      "@ionic/vue",
-      "node"
-    ],
+📁 경로 매핑 (paths)
+• baseUrl: 상대 경로 기준점 설정
+• paths: 경로 별칭 매핑 (vite.config.ts와 동일하게)
+• 절대 경로 import로 코드 가독성 향상
+• IDE 자동완성 및 리팩토링 지원
 
-    // 라이브러리 지원
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+📚 라이브러리 지원 (lib, types)
+• lib: 사용할 라이브러리 타입 (DOM, ES2020 등)
+• types: 포함할 타입 정의 파일
+• typeRoots: 타입 정의 파일 위치
+• skipLibCheck: 라이브러리 타입 검사 건너뛰기
 
-    // 출력 설정
-    "outDir": "dist",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true
-  },
+📤 출력 설정 (output)
+• outDir: 컴파일된 파일 출력 디렉토리
+• declaration: .d.ts 파일 생성 여부
+• declarationMap: 타입 정의 소스맵 생성
+• sourceMap: 소스맵 파일 생성
 
-  "include": [
-    "src/**/*",
-    "src/**/*.vue"
-  ],
+🔍 포함/제외 설정 (include/exclude)
+• include: 컴파일에 포함할 파일/폴더 패턴
+• exclude: 컴파일에서 제외할 파일/폴더 패턴
+• 테스트 파일, node_modules 등 제외
+• Vue SFC 파일 포함 설정
 
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ]
-}
+⚡ 성능 최적화
+• incremental: 증분 컴파일 활성화
+• tsBuildInfoFile: 빌드 정보 캐시 파일
+• composite: 프로젝트 참조 기능 활성화
+• skipDefaultLibCheck: 기본 라이브러리 검사 건너뛰기
+
+🛡️ 엄격한 검사 옵션
+• noImplicitAny: 암시적 any 타입 금지
+• strictNullChecks: null/undefined 엄격 검사
+• noImplicitReturns: 모든 코드 경로 반환값 필수
+• noUnusedLocals: 미사용 지역 변수 검사
 ```
 
 ---
@@ -369,50 +367,6 @@ export default defineConfig({
 
 ### 🧪 빌드 및 배포 테스트
 
-#### **빌드 프로세스 검증**
-
-```bash
-# 빌드 테스트 스크립트 예시
-#!/bin/bash
-
-echo "🏗️ 빌드 테스트 시작..."
-
-# 1. 의존성 설치 테스트
-npm ci
-
-# 2. 타입 체크
-npm run type-check
-
-# 3. 린트 검사
-npm run lint
-
-# 4. 단위 테스트
-npm run test
-
-# 5. 빌드 실행
-npm run build
-
-# 6. 빌드 결과 검증
-if [ -d "dist" ]; then
-    echo "✅ 빌드 성공"
-
-    # 번들 크기 체크
-    echo "📦 번들 크기:"
-    du -sh dist/*
-
-    # 중요 파일 존재 확인
-    if [ -f "dist/index.html" ]; then
-        echo "✅ index.html 생성 확인"
-    fi
-
-else
-    echo "❌ 빌드 실패"
-    exit 1
-fi
-
-echo "🎉 빌드 테스트 완료"
-```
-
 #### **배포 전 체크리스트**
 
 ```text
@@ -420,15 +374,9 @@ echo "🎉 빌드 테스트 완료"
 
 🏗️ 빌드 검증
 □ 빌드 에러 없음
-□ 타입 체크 통과
-□ 린트 검사 통과
+□ 타입 체크 통과 (npm run type-check)
+□ 린트 검사 통과 (npm run lint-check)
 □ 번들 크기 적정 수준
-
-📱 기능 검증
-□ 주요 화면 렌더링 정상
-□ 라우팅 동작 확인
-□ bizMOB 브릿지 통신 정상
-□ API 호출 정상
 
 🔧 환경 설정
 □ 환경 변수 설정 확인
@@ -445,75 +393,70 @@ echo "🎉 빌드 테스트 완료"
 
 ### 🔧 코드 스니펫 작성
 
-#### **VSCode 스니펫 예시**
+#### **코드 스니펫이 필요한 이유**
+
+```text
+🎯 개발 생산성 향상:
+
+⏰ 시간 절약
+• 반복적인 코드 패턴을 빠르게 생성
+• 타이핑 시간 대폭 단축
+• 코드 작성 속도 3-5배 향상
+
+🎯 일관성 유지
+• 팀 전체가 동일한 코드 구조 사용
+• 네이밍 컨벤션 자동 적용
+• 코드 리뷰 시간 단축
+
+❌ 실수 방지
+• 오타, 구문 오류 사전 방지
+• 필수 import 구문 누락 방지
+• 표준 템플릿 준수
+```
+
+#### **간단한 스니펫 예시**
 
 ```json
 {
-  "Vue 3 Composition Component": {
-    "prefix": "v3comp",
+  "Vue Component": {
+    "prefix": "vcomp",
     "body": [
       "<template>",
-      "  <div class=\"${1:component-name}\">",
+      "  <div class=\"$1\">",
       "    $2",
       "  </div>",
       "</template>",
       "",
       "<script setup lang=\"ts\">",
-      "import { ref, computed, onMounted } from 'vue'",
-      "",
-      "interface Props {",
-      "  $3",
-      "}",
-      "",
-      "const props = defineProps<Props>()",
-      "const emit = defineEmits<{",
-      "  $4",
-      "}>()",
-      "",
-      "// 반응형 상태",
-      "const $5 = ref('')",
-      "",
-      "// 계산된 속성",
-      "const $6 = computed(() => {",
-      "  return $7",
-      "})",
-      "",
-      "// 생명주기",
-      "onMounted(() => {",
-      "  $8",
-      "})",
+      "$3",
       "</script>",
       "",
       "<style scoped>",
-      ".${1:component-name} {",
-      "  $9",
+      ".$1 {",
+      "  $4",
       "}",
       "</style>"
     ],
-    "description": "Vue 3 Composition API 컴포넌트 템플릿"
-  },
-
-  "bizMOB Bridge Call": {
-    "prefix": "bizmob-call",
-    "body": [
-      "bizMOB.bridge.call({",
-      "  method: '${1:methodName}',",
-      "  params: {",
-      "    $2",
-      "  },",
-      "  callback: (result) => {",
-      "    if (result.success) {",
-      "      $3",
-      "    } else {",
-      "      console.error('bizMOB 호출 실패:', result.error)",
-      "      $4",
-      "    }",
-      "  }",
-      "})"
-    ],
-    "description": "bizMOB 브릿지 호출 템플릿"
+    "description": "Vue 3 기본 컴포넌트"
   }
 }
+```
+
+#### **사용 예시**
+
+```text
+📝 스니펫 사용법:
+
+1. VSCode에서 새 파일 생성
+2. 'vcomp' 입력 후 Tab 키
+3. 자동으로 Vue 컴포넌트 템플릿 생성
+4. Tab 키로 각 필드 순서대로 입력
+
+💡 결과:
+• 빠른 기본 구조 완성
+• 오타 없는 정확한 문법
+• 일관된 코드 스타일 유지
+• 필수 섹션 누락 방지
 ```
 
 ---
@@ -525,7 +468,7 @@ echo "🎉 빌드 테스트 완료"
 #### **다국어 지원 (i18n)**
 
 ```text
-🗺️ 다국어 고려사항:
+🗺️ 고려사항:
 
 📝 텍스트 관리
 • 모든 텍스트 외부화 (하드코딩 금지)
@@ -544,6 +487,10 @@ echo "🎉 빌드 테스트 완료"
 • 시간 형식 (12시간제 vs 24시간제)
 • 타임존 처리
 • 달력 시스템 차이 (양력/음력)
+• ISO 8601 표준 형식 활용 (YYYY-MM-DDTHH:mm:ssZ)
+(예시: 2025-01-15T14:30:00Z (UTC 시간), 2025-01-15T23:30:00+09:00 (한국 시간))
+• API 통신 시 ISO 8601 사용으로 일관성 확보
+• 프론트엔드 표시용과 백엔드 통신용 형식 분리
 
 💰 숫자/통화 형식
 • 천 단위 구분자 차이 (쉼표 vs 점)
@@ -566,7 +513,6 @@ echo "🎉 빌드 테스트 완료"
 • 종교적 금기사항 확인
 • 인종/성별 다양성 고려
 • 지역별 문화적 차이 반영
-• 손가락 제스처 의미 차이
 
 📱 UX 패턴
 • 읽기 방향에 따른 네비게이션 구조
@@ -638,7 +584,7 @@ echo "🎉 빌드 테스트 완료"
 export const formatUtils = {
   // 날짜 포맷팅
   formatDate: (date: Date, format: string = 'YYYY-MM-DD'): string => {
-    // 날짜 포맷팅 로직
+    return date.toLocaleDateString('ko-KR')
   },
 
   // 숫자 포맷팅
@@ -687,11 +633,6 @@ export const validationUtils = {
       number: /\d/.test(password),
       special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
     }
-  },
-
-  // 한국 주민등록번호 검증
-  isValidKoreanSSN: (ssn: string): boolean => {
-    // 주민등록번호 검증 로직
   }
 }
 ```
@@ -699,69 +640,373 @@ export const validationUtils = {
 #### **bizMOB 유틸리티**
 
 ```typescript
-// src/utils/bizmob.ts
-export const bizmobUtils = {
-  // 디바이스 정보 조회
-  getDeviceInfo: (): Promise<DeviceInfo> => {
-    return new Promise((resolve, reject) => {
-      bizMOB.bridge.call({
-        method: 'getDeviceInfo',
-        callback: (result) => {
-          if (result.success) {
-            resolve(result.data)
-          } else {
-            reject(new Error(result.error))
-          }
-        }
-      })
-    })
-  },
+// src/utils/native.ts
+export const callGallery = async(max = 1) => {
+  if (bizMOB.Device.isApp) {
+    const msg = await bizMOB.System.callGallery("image", max);
 
-  // 네트워크 상태 확인
-  getNetworkStatus: (): Promise<NetworkStatus> => {
-    return new Promise((resolve, reject) => {
-      bizMOB.bridge.call({
-        method: 'getNetworkStatus',
-        callback: (result) => {
-          if (result.success) {
-            resolve(result.data)
-          } else {
-            reject(new Error(result.error))
-          }
-        }
-      })
-    })
-  },
+    if (msg.result) {
+      return {
+        result: true,
+        images: msg.images
+          .sort((a: any, b: any) => a.index - b.index)
+          .map((img: any) => ({
+            fileName: img.filename,
+            path: img.uri,
+            size: Number(img.size)
+          }))
+      };
+    }
+    else {
+      return { result: false, images: [] };
+    }
+  }
+  else {
+    return {
+      result: true,
+      images: [{ fileName: "parts_300x170_2.jpg", path: "/data/parts_300x170_2.jpg", size: 10000 }]
+    };
+  }
+};
 
-  // 토스트 메시지 표시
-  showToast: (message: string, duration: number = 3000): void => {
-    bizMOB.bridge.call({
-      method: 'showToast',
-      params: { message, duration }
-    })
-  },
+// GPS 위치 정보 조회
+export const getGPS = async (isAddressCheck = false) => {
+  const msg: any = await bizMOB.App.callPlugIn("GET_LOCATION", {
+    isAddressCheck,
+  });
 
-  // 로딩 스피너 제어
-  showLoading: (show: boolean): void => {
-    bizMOB.bridge.call({
-      method: show ? 'showLoading' : 'hideLoading'
-    })
+  if (msg.result) {
+    return {
+      result: true,
+      lat: Number(msg.latitude), // 위도
+      lng: Number(msg.longitude), // 경도
+      addr: isAddressCheck ? msg.address : "", // 주소
+    };
+  }
+  else {
+    return {
+      result: false,
+      lat: 37.566657817476,
+      lng: 126.98037562885644,
+      addr: "경기 성남시 분당구 정자동 4-5",
+    };
+  }
+};
+```
+
+---
+
+## 🚀 사용자 경험 향상 컴포넌트
+
+### 📄 옵저버 패턴 페이징 시스템
+
+#### **무한 스크롤 페이징 구현**
+
+```typescript
+// src/composables/usePagination.ts
+export function usePagination<T>(apiCall: (page: number) => Promise<T[]>) {
+  const items = ref<T[]>([])
+  const page = ref(1)
+  const isLoading = ref(false)
+  const hasMore = ref(true)
+
+  const loadMore = async () => {
+    if (isLoading.value || !hasMore.value) return
+
+    isLoading.value = true
+    try {
+      const newItems = await apiCall(page.value)
+      if (newItems.length === 0) {
+        hasMore.value = false
+      } else {
+        items.value.push(...newItems)
+        page.value++
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  return { items, isLoading, hasMore, loadMore }
+}
+```
+
+### ⏳ 로딩 프로세스 관리 시스템
+
+#### **동시/연속 동작 로딩 관리**
+
+```typescript
+// src/composables/useLoadingManager.ts
+export function useLoadingManager() {
+  const loadingTasks = ref(new Set<string>())
+
+  const startLoading = (taskId: string) => {
+    loadingTasks.value.add(taskId)
+  }
+
+  const stopLoading = (taskId: string) => {
+    loadingTasks.value.delete(taskId)
+  }
+
+  const isLoading = computed(() => loadingTasks.value.size > 0)
+
+  return { startLoading, stopLoading, isLoading }
+}
+```
+
+### 🌐 API 통신 서비스
+
+#### **통합 API 서비스**
+
+```typescript
+// src/services/apiService.ts
+export class ApiService {
+  // ...
+
+  async requestTr({
+    trcode,
+    httpHeader = {},
+    header = {},
+    body = {},
+    timeout = 60, // sec 단위 (기본 60초)
+    isMock = false,
+    isLoading = true,
+    isErrorAlert = true
+  }: any): Promise<any> {
+    const appStore = new StoreService('app');
+    const { alert } = useMessage();
+
+
+    if (isLoading) {
+      // 로딩 프로그레스 on
+      appStore.dispatch('showLoading');
+    }
+
+    // bizmob API 통신
+    const res: any = await Network.requestTr({
+      _sTrcode: trcode,
+      _oHttpHeader: {
+        ...generateHttpHeader(),
+        ...httpHeader
+      },
+      _oHeader: {
+        ...generateTrHeader(),
+        ...header
+      },
+      _oBody: body,
+      _bMock: isMock,
+      _nTimeout: timeout,
+      _bProgressEnable: false, // Native 프로그레스는 Off
+    });
+
+    if (isLoading) {
+      // 로딩 프로그레스 off
+      appStore.dispatch('hideLoading');
+    }
+
+    // response 에러 확인
+    const state: any = handleTrcodeChecker(res);
+
+    // 성공
+    if (state.result) {
+      // ...
+    }
+    // 실패
+    else {
+      // ...
+    }
   }
 }
+
+export const apiService = new ApiService()
+```
+
+### 🖼️ 이미지 레이지 로딩 컴포넌트
+
+#### **지연 로딩 이미지 컴포넌트**
+
+```vue
+<!-- src/components/LazyImage.vue -->
+<template>
+  <div class="lazy-image-container">
+    <img
+      v-if="isLoaded"
+      :src="src"
+      :alt="alt"
+      @load="onLoad"
+      @error="onError"
+    />
+    <div v-else-if="isLoading" class="placeholder">
+      <ion-spinner></ion-spinner>
+    </div>
+    <div v-else-if="hasError" class="error">
+      이미지 로드 실패
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+interface Props {
+  src: string
+  alt?: string
+}
+
+const props = defineProps<Props>()
+const isLoading = ref(true)
+const isLoaded = ref(false)
+const hasError = ref(false)
+
+const imageRef = ref<HTMLDivElement>()
+
+onMounted(() => {
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      loadImage()
+      observer.disconnect()
+    }
+  })
+
+  if (imageRef.value) observer.observe(imageRef.value)
+})
+
+const loadImage = () => {
+  const img = new Image()
+  img.onload = () => onLoad()
+  img.onerror = () => onError()
+  img.src = props.src
+}
+
+const onLoad = () => {
+  isLoading.value = false
+  isLoaded.value = true
+}
+
+const onError = () => {
+  isLoading.value = false
+  hasError.value = true
+}
+</script>
+```
+
+### 🔄 풀투리프레시 (Pull-to-Refresh)
+
+#### **풀투리프레시 구현**
+
+```vue
+<!-- src/components/PullToRefresh.vue -->
+<template>
+  <div class="pull-refresh-container" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+    <div class="refresh-indicator" :class="{ active: isRefreshing }">
+      <ion-spinner v-if="isRefreshing"></ion-spinner>
+      <span v-else>당겨서 새로고침</span>
+    </div>
+
+    <div class="content" :style="{ transform: `translateY(${pullDistance}px)` }">
+      <slot></slot>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+const emit = defineEmits<{
+  refresh: []
+}>()
+
+const isRefreshing = ref(false)
+const pullDistance = ref(0)
+const startY = ref(0)
+const threshold = 60
+
+const onTouchStart = (e: TouchEvent) => {
+  startY.value = e.touches[0].clientY
+}
+
+const onTouchMove = (e: TouchEvent) => {
+  const currentY = e.touches[0].clientY
+  const diff = currentY - startY.value
+
+  if (diff > 0 && window.scrollY === 0) {
+    pullDistance.value = Math.min(diff * 0.5, threshold)
+  }
+}
+
+const onTouchEnd = async () => {
+  if (pullDistance.value >= threshold) {
+    isRefreshing.value = true
+    emit('refresh')
+
+    // 리프레시 완료 후 애니메이션
+    setTimeout(() => {
+      isRefreshing.value = false
+      pullDistance.value = 0
+    }, 1000)
+  } else {
+    pullDistance.value = 0
+  }
+}
+</script>
+```
+
+### 💀 스켈레톤 로딩 컴포넌트
+
+#### **카드 형태 스켈레톤**
+
+```vue
+<!-- src/components/SkeletonCard.vue -->
+<template>
+  <div class="skeleton-card">
+    <div class="skeleton-avatar"></div>
+    <div class="skeleton-content">
+      <div class="skeleton-line skeleton-title"></div>
+      <div class="skeleton-line skeleton-text"></div>
+      <div class="skeleton-line skeleton-text short"></div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.skeleton-card {
+  padding: 16px;
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+.skeleton-line {
+  height: 16px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+</style>
 ```
 
 ---
 
 ## ✅ 초기 작업 완료 체크리스트
 
-### 🎯 1주차 완료 기준
+### 🎯 초기 완료 기준
 
 ```text
 📋 필수 완료 항목:
 
 🏗️ 프로젝트 구조
 □ 폴더 구조 확정 및 생성
-□ 네이밍 컨벤션 문서화
 □ 경로 별칭 설정 완료
 □ TypeScript 설정 최적화
 
@@ -775,7 +1020,7 @@ export const bizmobUtils = {
 □ 필요 라이브러리 목록 작성
 □ 버전 호환성 검증 완료
 □ 테스트 화면 구현
-□ 번들 크기 영향 평가
+□ 번들 크기 영향 평가 (선택적)
 
 🔧 빌드 시스템
 □ Vite 설정 최적화
@@ -787,28 +1032,25 @@ export const bizmobUtils = {
 □ README.md 작성
 □ 개발 가이드 작성
 □ API 문서 템플릿 준비
-□ 트러블슈팅 가이드 초안
 ```
 
 ### 🚀 다음 단계 준비
 
 ```text
-🎯 2주차 준비사항:
+🎯 준비사항:
 
 📱 bizMOB 연동
-• bizMOB 브릿지 라이브러리 분석
 • 주요 API 사용법 정리
-• 네이티브 통신 테스트
+• 네이티브 호출 테스트 코드 작성
 
 🎨 UI 컴포넌트
 • Ionic 컴포넌트 활용법
 • 공통 컴포넌트 설계
-• 디자인 시스템 적용
 
 🏪 상태 관리
 • Pinia 스토어 구조 설계
 • API 데이터 플로우 설계
-• 캐싱 전략 수립
+• 캐싱 전략 수립 (선택적)
 
 🤖 AI 도구 활용
 • AI 기반 개발 워크플로우
@@ -821,12 +1063,14 @@ export const bizmobUtils = {
 ## 📚 참고 자료
 
 ### 🔗 핵심 문서
+
 - [Vue 3 스타일 가이드](https://vuejs.org/style-guide/)
 - [TypeScript 설정 가이드](https://www.typescriptlang.org/tsconfig)
 - [Vite 설정 레퍼런스](https://vitejs.dev/config/)
 - [Ionic Vue 가이드](https://ionicframework.com/docs/vue/overview)
 
 ### 🛠️ 도구 및 유틸리티
+
 - [Pinia 상태 관리](https://pinia.vuejs.org/)
 - [Vue Router 가이드](https://router.vuejs.org/)
 - [ESLint Vue 규칙](https://eslint.vuejs.org/)
