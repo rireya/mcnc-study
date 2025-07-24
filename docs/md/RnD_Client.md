@@ -4,7 +4,7 @@
 
 ---
 
-## 📋 Executive Summary (경영진 요약)
+## 📋 Executive Summary
 
 ### 🎯 프로젝트 개요
 
