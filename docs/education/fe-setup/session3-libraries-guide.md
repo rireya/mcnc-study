@@ -486,7 +486,7 @@ export default i18n
     "settings": "설정",
     "logout": "로그아웃"
   },
-  "validation": {
+  "check": {
     "required": "필수 입력 항목입니다",
     "email": "올바른 이메일 형식이 아닙니다",
     "minLength": "최소 {min}자 이상 입력해주세요"
@@ -512,7 +512,7 @@ export default i18n
 
       <!-- 매개변수 전달 -->
       <ion-note>
-        {{ $t('validation.minLength', { min: 8 }) }}
+        {{ $t('check.minLength', { min: 8 }) }}
       </ion-note>
 
       <!-- 언어 선택 -->
