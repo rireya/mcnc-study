@@ -64,8 +64,8 @@
         },
         {
           "filename": "session3-libraries-guide.md",
-          "title": "📦 3차: 핵심 라이브러리 활용법",
-          "description": "Pinia 상태관리, Ionic 컴포넌트, 보안/유틸리티 라이브러리 실무 활용"
+          "title": "📦 3차: 주요 라이브러리",
+          "description": "Pinia 상태관리, Ionic 컴포넌트, 보안/유틸리티 라이브러리"
         }
       ]
     },
