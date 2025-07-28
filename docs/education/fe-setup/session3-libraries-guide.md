@@ -494,50 +494,6 @@ export default i18n
 }
 ```
 
-### 4.2 컴포넌트에서 사용
-
-```vue
-<template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>{{ $t('user.profile') }}</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-      <ion-item>
-        <ion-label>{{ $t('common.loading') }}</ion-label>
-      </ion-item>
-
-      <!-- 매개변수 전달 -->
-      <ion-note>
-        {{ $t('check.minLength', { min: 8 }) }}
-      </ion-note>
-
-      <!-- 언어 선택 -->
-      <ion-select v-model="currentLocale" @selectionChange="changeLocale">
-        <ion-select-option value="ko">한국어</ion-select-option>
-        <ion-select-option value="en">English</ion-select-option>
-      </ion-select>
-    </ion-content>
-  </ion-page>
-</template>
-
-<script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-
-const { locale, t } = useI18n()
-const currentLocale = ref(locale.value)
-
-const changeLocale = (event: any) => {
-  locale.value = event.detail.value
-  // 로컬스토리지에 저장
-  localStorage.setItem('locale', locale.value)
-}
-</script>
-```
-
 ---
 
 ## ⚡ 개발 효율성 도구
